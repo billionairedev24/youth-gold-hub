@@ -34,8 +34,8 @@ interface DashboardSidebarProps {
 const DashboardSidebar = ({ isOpen }: DashboardSidebarProps) => {
   return (
     <Sidebar
-      className={`bg-white border-r border-gray-200 transition-all duration-300 ${
-        isOpen ? "w-64" : "w-20"
+      className={`fixed left-0 top-0 h-full bg-white border-r border-gray-200 transition-all duration-300 ${
+        isOpen ? "w-64" : "w-16"
       }`}
     >
       <SidebarContent>
