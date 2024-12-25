@@ -68,3 +68,17 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
+
+/* Fix dropdown transparency and z-index */
+[data-radix-popper-content-wrapper] {
+  z-index: 50 !important;
+}
+
+.dropdown-content {
+  @apply bg-white shadow-lg ring-1 ring-black ring-opacity-5;
+  z-index: 50;
+}
+
+[role="menu"] {
+  @apply bg-white;
+}
