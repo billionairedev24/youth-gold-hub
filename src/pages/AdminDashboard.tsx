@@ -1,6 +1,18 @@
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Users, Calendar, MessageSquare, BarChart3, UserPlus, Bell, Settings, Shield, PlusCircle } from "lucide-react";
+import { 
+  Users, 
+  Calendar, 
+  MessageSquare, 
+  BarChart3, 
+  UserPlus, 
+  Bell, 
+  Settings, 
+  Shield, 
+  PlusCircle,
+  Vote,
+  DollarSign 
+} from "lucide-react";
 import { auth } from "@/lib/auth";
 import { Link } from "react-router-dom";
 
