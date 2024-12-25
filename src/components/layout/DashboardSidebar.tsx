@@ -37,7 +37,7 @@ interface DashboardSidebarProps {
 const DashboardSidebar = ({ isOpen }: DashboardSidebarProps) => {
   return (
     <Sidebar
-      className={`fixed inset-y-0 left-0 bg-white border-r border-gray-200 transition-all duration-300 ${
+      className={`fixed inset-y-0 left-0 z-20 bg-white border-r border-gray-200 transition-all duration-300 ${
         isOpen ? "w-64" : "w-16"
       }`}
     >
