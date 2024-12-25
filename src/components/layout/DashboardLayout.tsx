@@ -12,7 +12,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-accent relative">
+      <div className="flex min-h-screen bg-accent">
         <DashboardSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
         <div className={`flex-1 flex flex-col transition-all duration-300 ${
           isSidebarOpen ? 'ml-64' : 'ml-16'
