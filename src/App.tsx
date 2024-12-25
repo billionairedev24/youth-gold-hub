@@ -4,6 +4,10 @@ import SignUpForm from "@/components/auth/SignUpForm";
 import AuthGuard from "@/components/auth/AuthGuard";
 import UserDashboard from "@/pages/UserDashboard";
 import AdminDashboard from "@/pages/AdminDashboard";
+import CreateEvent from "@/pages/admin/CreateEvent";
+import CreatePoll from "@/pages/admin/CreatePoll";
+import CreateAnnouncement from "@/pages/admin/CreateAnnouncement";
+import CreateBudget from "@/pages/admin/CreateBudget";
 
 const App = () => {
   return (
@@ -20,10 +24,42 @@ const App = () => {
           }
         />
         <Route
-          path="/admin/*"
+          path="/admin"
           element={
             <AuthGuard allowedRoles={["admin"]}>
               <AdminDashboard />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/admin/events/create"
+          element={
+            <AuthGuard allowedRoles={["admin"]}>
+              <CreateEvent />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/admin/polls/create"
+          element={
+            <AuthGuard allowedRoles={["admin"]}>
+              <CreatePoll />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/admin/announcements/create"
+          element={
+            <AuthGuard allowedRoles={["admin"]}>
+              <CreateAnnouncement />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/admin/budget/create"
+          element={
+            <AuthGuard allowedRoles={["admin"]}>
+              <CreateBudget />
             </AuthGuard>
           }
         />
