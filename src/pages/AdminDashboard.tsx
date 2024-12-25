@@ -1,7 +1,8 @@
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Users, Calendar, MessageSquare, BarChart3, UserPlus, Bell, Settings, Shield } from "lucide-react";
+import { Users, Calendar, MessageSquare, BarChart3, UserPlus, Bell, Settings, Shield, PlusCircle } from "lucide-react";
 import { auth } from "@/lib/auth";
+import { Link } from "react-router-dom";
 
 const AdminDashboard = () => {
   const stats = [
@@ -36,29 +37,29 @@ const AdminDashboard = () => {
   ];
 
   const quickActions = [
-    {
-      title: "Manage Users",
-      description: "View and manage user accounts",
-      icon: Users,
-      link: "/admin/users"
+    { 
+      title: "Create Event", 
+      description: "Schedule a new event",
+      icon: Calendar,
+      link: "/admin/events/create"
     },
     {
-      title: "Announcements",
-      description: "Create and send notifications",
-      icon: Bell,
-      link: "/admin/announcements"
+      title: "Create Announcement",
+      description: "Post a new announcement",
+      icon: MessageSquare,
+      link: "/admin/announcements/create"
     },
     {
-      title: "System Settings",
-      description: "Configure system preferences",
-      icon: Settings,
-      link: "/admin/settings"
+      title: "Create Poll",
+      description: "Start a new poll",
+      icon: Vote,
+      link: "/admin/polls/create"
     },
     {
-      title: "Analytics",
-      description: "View detailed reports",
-      icon: BarChart3,
-      link: "/admin/analytics"
+      title: "Create Budget",
+      description: "Add new budget entry",
+      icon: DollarSign,
+      link: "/admin/budget/create"
     }
   ];
 
@@ -102,17 +103,19 @@ const AdminDashboard = () => {
           <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {quickActions.map((action) => (
-              <Card key={action.title} className="hover:bg-accent/50 transition-colors cursor-pointer">
-                <CardContent className="pt-6">
-                  <div className="flex flex-col items-center text-center space-y-2">
-                    <div className="p-3 bg-primary/10 rounded-full">
-                      <action.icon className="h-6 w-6 text-primary" />
+              <Link to={action.link} key={action.title}>
+                <Card className="hover:bg-accent/50 transition-colors cursor-pointer h-full">
+                  <CardContent className="pt-6">
+                    <div className="flex flex-col items-center text-center space-y-2">
+                      <div className="p-3 bg-primary/10 rounded-full">
+                        <PlusCircle className="h-6 w-6 text-primary" />
+                      </div>
+                      <h3 className="font-semibold">{action.title}</h3>
+                      <p className="text-sm text-muted-foreground">{action.description}</p>
                     </div>
-                    <h3 className="font-semibold">{action.title}</h3>
-                    <p className="text-sm text-muted-foreground">{action.description}</p>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
         </div>

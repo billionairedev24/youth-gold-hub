@@ -10,6 +10,7 @@ import {
 import { LogOut, Settings, User } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 interface UserMenuProps {
   onProfileClick: () => void;
@@ -20,6 +21,7 @@ interface UserMenuProps {
 const UserMenu = ({ onProfileClick, onSettingsClick, profileImage }: UserMenuProps) => {
   const navigate = useNavigate();
   const user = auth.getCurrentUser();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = async () => {
     await auth.signOut();
@@ -27,7 +29,7 @@ const UserMenu = ({ onProfileClick, onSettingsClick, profileImage }: UserMenuPro
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="hover:bg-accent">
           <Avatar className="h-8 w-8">
@@ -48,11 +50,17 @@ const UserMenu = ({ onProfileClick, onSettingsClick, profileImage }: UserMenuPro
           </div>
         </div>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={onProfileClick}>
+        <DropdownMenuItem onClick={() => {
+          onProfileClick();
+          setIsOpen(false);
+        }}>
           <User className="mr-2 h-4 w-4" />
           <span>Profile</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={onSettingsClick}>
+        <DropdownMenuItem onClick={() => {
+          onSettingsClick();
+          setIsOpen(false);
+        }}>
           <Settings className="mr-2 h-4 w-4" />
           <span>Settings</span>
         </DropdownMenuItem>

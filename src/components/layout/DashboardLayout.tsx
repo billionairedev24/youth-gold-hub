@@ -26,7 +26,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} 
             showMenuButton={isAdmin}
           />
-          <main className="flex-1 p-6 overflow-auto animate-fadeIn">
+          <main className="flex-1 p-6 overflow-auto">
             {children}
           </main>
         </div>

@@ -15,7 +15,6 @@ import {
   Settings,
   Vote,
   Home,
-  PlusCircle,
   DollarSign,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -28,13 +27,6 @@ const menuItems = [
   { title: "Budget", icon: DollarSign, url: "/admin/budget" },
   { title: "Analytics", icon: BarChart3, url: "/admin/analytics" },
   { title: "Settings", icon: Settings, url: "/admin/settings" },
-];
-
-const createItems = [
-  { title: "Create Event", icon: Calendar, url: "/admin/events/create" },
-  { title: "Create Announcement", icon: MessageSquare, url: "/admin/announcements/create" },
-  { title: "Create Poll", icon: Vote, url: "/admin/polls/create" },
-  { title: "Create Budget", icon: DollarSign, url: "/admin/budget/create" },
 ];
 
 interface DashboardSidebarProps {
@@ -69,31 +61,6 @@ const DashboardSidebar = ({ isOpen }: DashboardSidebarProps) => {
                   >
                     <Link to={item.url} className="flex items-center space-x-3">
                       <item.icon className="w-5 h-5 text-primary" />
-                      <span className={`${!isOpen ? "sr-only" : ""}`}>
-                        {item.title}
-                      </span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel className={!isOpen ? "sr-only" : ""}>
-            Quick Actions
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {createItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    className="flex items-center space-x-3 px-4 py-2 hover:bg-accent rounded-lg transition-colors"
-                  >
-                    <Link to={item.url} className="flex items-center space-x-3">
-                      <PlusCircle className="w-5 h-5 text-primary" />
                       <span className={`${!isOpen ? "sr-only" : ""}`}>
                         {item.title}
                       </span>
