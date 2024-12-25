@@ -20,7 +20,7 @@ const App = () => {
           }
         />
         <Route
-          path="/admin"
+          path="/admin/*"
           element={
             <AuthGuard allowedRoles={["admin"]}>
               <AdminDashboard />
