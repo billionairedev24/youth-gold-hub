@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { Navigate } from "react-router-dom";
+import { ReactNode, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { auth, UserRole } from "@/lib/auth";
 
 interface AuthGuardProps {
@@ -8,14 +8,31 @@ interface AuthGuardProps {
 }
 
 const AuthGuard = ({ children, allowedRoles = ["member", "admin"] }: AuthGuardProps) => {
+  const navigate = useNavigate();
   const currentUser = auth.getCurrentUser();
 
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/signin");
+      return;
+    }
+
+    if (allowedRoles && !allowedRoles.includes(currentUser.role)) {
+      if (currentUser.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/dashboard");
+      }
+      return;
+    }
+  }, [currentUser, allowedRoles, navigate]);
+
   if (!currentUser) {
-    return <Navigate to="/signin" replace />;
+    return null;
   }
 
   if (allowedRoles && !allowedRoles.includes(currentUser.role)) {
-    return <Navigate to="/" replace />;
+    return null;
   }
 
   return <>{children}</>;
