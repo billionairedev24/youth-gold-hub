@@ -28,6 +28,7 @@ const DashboardNavbar = ({ onMenuClick, showMenuButton = false }: DashboardNavba
   const [showProfileDialog, setShowProfileDialog] = useState(false);
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   
   // This would come from your auth context in a real app
   const user = auth.getCurrentUser();
@@ -114,7 +115,7 @@ const DashboardNavbar = ({ onMenuClick, showMenuButton = false }: DashboardNavba
             <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
           </Button>
           
-          <DropdownMenu>
+          <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="hover:bg-accent">
                 <Avatar className="h-8 w-8">
