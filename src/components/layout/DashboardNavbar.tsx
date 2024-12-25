@@ -22,7 +22,7 @@ const DashboardNavbar = ({ onMenuClick }: DashboardNavbarProps) => {
   };
 
   return (
-    <nav className="sticky top-0 z-10 bg-white border-b border-gray-200 px-4 py-2.5">
+    <nav className="sticky top-0 z-20 bg-white border-b border-gray-200 px-4 py-2.5">
       <div className="flex justify-between items-center">
         <div className="flex items-center">
           <Button
@@ -51,7 +51,10 @@ const DashboardNavbar = ({ onMenuClick }: DashboardNavbarProps) => {
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuContent 
+              align="end" 
+              className="w-56 z-50 bg-white"
+            >
               <div className="flex items-center justify-start gap-2 p-2">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none">{user.name}</p>
