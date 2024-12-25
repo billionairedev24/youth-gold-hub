@@ -9,7 +9,7 @@ export interface User {
 }
 
 // Mock users - Replace with real authentication later
-const mockUsers = [
+let mockUsers = [
   {
     id: '1',
     name: 'Admin User',
@@ -56,4 +56,20 @@ export const auth = {
   },
 
   getCurrentUser: () => currentUser,
+
+  updateUserProfile: (updates: Partial<User>) => {
+    if (!currentUser) return;
+    
+    // Update mock users array
+    mockUsers = mockUsers.map(user => 
+      user.id === currentUser?.id 
+        ? { ...user, ...updates }
+        : user
+    );
+
+    // Update current user
+    currentUser = { ...currentUser, ...updates };
+    
+    return currentUser;
+  }
 };
