@@ -16,8 +16,13 @@ const SignInForm = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await auth.signIn(phone);
-      navigate("/");
+      const user = await auth.signIn(phone);
+      // Route based on user role
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (error) {
       console.error(error);
     } finally {
