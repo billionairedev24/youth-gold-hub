@@ -14,7 +14,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-accent">
         <DashboardSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-        <div className="flex-1 flex flex-col">
+        <div className={`flex-1 flex flex-col transition-all duration-300 ${isSidebarOpen ? 'md:ml-64' : 'md:ml-20'}`}>
           <DashboardNavbar onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
           <main className="flex-1 p-6 overflow-auto animate-fadeIn">
             {children}
