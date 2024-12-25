@@ -37,6 +37,7 @@ const DashboardSidebar = ({ isOpen }: DashboardSidebarProps) => {
       className={`fixed left-0 top-0 h-full bg-white border-r border-gray-200 transition-all duration-300 ${
         isOpen ? "w-64" : "w-16"
       }`}
+      style={{ position: 'absolute' }}
     >
       <SidebarContent>
         <div className="p-4">
