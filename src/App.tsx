@@ -8,6 +8,7 @@ import AnalyticsPage from "./pages/admin/AnalyticsPage";
 import SettingsPage from "./pages/admin/SettingsPage";
 import SuggestionsPage from "./pages/admin/SuggestionsPage";
 import LoginPage from "./pages/LoginPage";
+import UserDashboard from "./pages/UserDashboard";
 import { PrivateRoute } from "./components/auth/PrivateRoute";
 import { Toaster } from "./components/ui/toaster";
 import DashboardLayout from "./components/layout/DashboardLayout";
@@ -17,6 +18,11 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/dashboard" element={
+          <PrivateRoute>
+            <UserDashboard />
+          </PrivateRoute>
+        } />
         <Route path="/admin" element={
           <PrivateRoute>
             <DashboardLayout>
