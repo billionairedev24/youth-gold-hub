@@ -57,7 +57,7 @@ export function MembersTableToolbar({ table }: MembersTableToolbarProps) {
           <DropdownMenuTrigger asChild>
             <Button variant="outline">Columns</Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="bg-white">
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())

@@ -2,26 +2,28 @@ import { Table } from "@tanstack/react-table";
 
 export function exportToCSV<T>(table: Table<T>, filename: string) {
   const headers = table.getAllColumns()
-    .filter((column) => column.getCanHide())
-    .map((column) => column.id);
+    .filter(column => column.getCanHide())
+    .map(column => column.id)
+    .join(',');
 
-  const csvContent = [
-    headers.join(","),
-    ...table.getRowModel().rows.map((row) =>
-      headers
-        .map((header) => {
-          const cell = row.getAllCells().find((cell) => cell.column.id === header);
-          const value = cell?.getValue();
-          return `"${value ?? ""}"`;
-        })
-        .join(",")
-    ),
-  ].join("\n");
+  const rows = table.getRowModel().rows.map(row => {
+    return table.getAllColumns()
+      .filter(column => column.getCanHide())
+      .map(column => {
+        const value = row.getValue(column.id);
+        return typeof value === 'string' ? `"${value}"` : value;
+      })
+      .join(',');
+  }).join('\n');
 
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.setAttribute("download", `${filename}.csv`);
+  const csv = `${headers}\n${rows}`;
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  
+  link.setAttribute('href', url);
+  link.setAttribute('download', `${filename}.csv`);
+  link.style.visibility = 'hidden';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
