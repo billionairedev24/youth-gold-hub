@@ -1,4 +1,4 @@
-import { Bell, Menu } from "lucide-react";
+import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import UserMenu from "./navbar/UserMenu";
@@ -19,28 +19,15 @@ const DashboardNavbar = ({ onMenuClick, showMenuButton = false }: DashboardNavba
     <nav className="w-full bg-white border-b border-gray-200 shrink-0">
       <div className="h-16 px-4 flex items-center justify-between">
         <div className="flex items-center">
-          {showMenuButton && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onMenuClick}
-              className="mr-4 hover:bg-accent"
-            >
-              <Menu className="h-5 w-5" />
-            </Button>
-          )}
-          <div className="flex items-center space-x-2">
-            <div className="bg-primary rounded-full p-2">
-              <span className="text-white font-bold text-lg">GYA</span>
-            </div>
-            <span className="text-xl font-semibold text-gray-900">Youth Admin</span>
+          <div className="bg-primary rounded-full p-3">
+            <span className="text-white font-bold text-xl">GYA</span>
           </div>
         </div>
         
         <div className="flex items-center space-x-4">
           <Button variant="ghost" size="icon" className="hover:bg-accent relative">
             <Bell className="h-5 w-5" />
-            <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
+            <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full border-2 border-white"></span>
           </Button>
           
           <UserMenu

@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { Calendar, MessageSquare, Bell, ArrowRight } from "lucide-react";
+import { Calendar, MessageSquare, Bell, Heart, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import DashboardNavbar from "@/components/layout/DashboardNavbar";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
@@ -93,6 +93,35 @@ const UserDashboard = () => {
       )
     },
     {
+      id: "prayer-requests",
+      content: (
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold">Prayer Requests</h2>
+            <Button variant="link" className="text-primary">Add Request</Button>
+          </div>
+          <Card className="p-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <Heart className="text-red-500 h-5 w-5" />
+                <div>
+                  <p className="font-medium">Upcoming Exams</p>
+                  <p className="text-sm text-gray-500">3 people praying</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <Heart className="text-red-500 h-5 w-5" />
+                <div>
+                  <p className="font-medium">Family Health</p>
+                  <p className="text-sm text-gray-500">5 people praying</p>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+      )
+    },
+    {
       id: "recent-activity",
       content: (
         <div>
@@ -136,7 +165,7 @@ const UserDashboard = () => {
               <div
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto"
+                className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto"
               >
                 {widgets.map((widget, index) => (
                   <Draggable key={widget.id} draggableId={widget.id} index={index}>
@@ -145,7 +174,7 @@ const UserDashboard = () => {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        className="bg-white rounded-lg shadow-sm p-6"
+                        className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
                       >
                         {widget.content}
                       </div>

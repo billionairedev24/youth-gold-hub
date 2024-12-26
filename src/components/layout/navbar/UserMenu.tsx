@@ -10,7 +10,7 @@ import {
 import { LogOut, Settings, User } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface UserMenuProps {
   onProfileClick: () => void;
@@ -22,11 +22,24 @@ const UserMenu = ({ onProfileClick, onSettingsClick, profileImage }: UserMenuPro
   const navigate = useNavigate();
   const user = auth.getCurrentUser();
   const [isOpen, setIsOpen] = useState(false);
+  const [greeting, setGreeting] = useState("");
+
+  useEffect(() => {
+    const getGreeting = () => {
+      const hour = new Date().getHours();
+      if (hour < 12) return "Good morning";
+      if (hour < 18) return "Good afternoon";
+      return "Good evening";
+    };
+    setGreeting(getGreeting());
+  }, []);
 
   const handleLogout = async () => {
     await auth.signOut();
     navigate("/signin");
   };
+
+  const firstName = user?.name?.split(" ")[0] || "User";
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -43,7 +56,7 @@ const UserMenu = ({ onProfileClick, onSettingsClick, profileImage }: UserMenuPro
       <DropdownMenuContent align="end" className="w-56">
         <div className="flex items-center justify-start gap-2 p-2">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user?.name}</p>
+            <p className="text-sm font-medium leading-none">{`${greeting}, ${firstName}!`}</p>
             <p className="text-xs leading-none text-muted-foreground">
               {user?.email}
             </p>
