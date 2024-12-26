@@ -36,7 +36,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             setIsOpen={setIsSidebarOpen} 
           />
         )}
-        <div className="flex flex-1 flex-col w-full">
+        <div className={`flex flex-1 flex-col transition-all duration-300 ${isSidebarOpen ? 'w-[calc(100%-16rem)]' : 'w-[calc(100%-4rem)]'}`}>
           <DashboardNavbar 
             onMenuClick={handleSidebarToggle} 
             showMenuButton={isAdmin}
