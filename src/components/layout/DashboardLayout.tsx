@@ -35,7 +35,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen overflow-hidden bg-accent">
+      <div className="flex h-screen overflow-hidden bg-background">
         {isAdmin && (
           <DashboardSidebar 
             isOpen={isSidebarOpen} 
@@ -52,10 +52,8 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             onMenuClick={handleSidebarToggle} 
             showMenuButton={isAdmin}
           />
-          <main className="flex-1 overflow-auto p-4 md:p-6">
-            <div className="container mx-auto">
-              {children}
-            </div>
+          <main className="flex-1 overflow-auto">
+            {children}
           </main>
         </div>
       </div>

@@ -2,36 +2,29 @@ import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import {
-  Calendar,
-  BarChart3,
-  MessageSquare,
-  Settings,
-  Vote,
+  LayoutDashboard,
+  BarChart2,
+  Cloud,
+  Network,
   Home,
-  DollarSign,
-  Lightbulb,
-  X,
+  LogOut,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 
 const menuItems = [
-  { title: "Dashboard", icon: Home, url: "/admin" },
-  { title: "Events", icon: Calendar, url: "/admin/events" },
-  { title: "Announcements", icon: MessageSquare, url: "/admin/announcements" },
-  { title: "Polls", icon: Vote, url: "/admin/polls" },
-  { title: "Budget", icon: DollarSign, url: "/admin/budget" },
-  { title: "Suggestions", icon: Lightbulb, url: "/admin/suggestions" },
-  { title: "Analytics", icon: BarChart3, url: "/admin/analytics" },
-  { title: "Settings", icon: Settings, url: "/admin/settings" },
+  { title: "Main", icon: Home, url: "/admin" },
+  { title: "Analytics", icon: BarChart2, url: "/admin/analytics" },
+  { title: "Cloud Storage", icon: Cloud, url: "/admin/storage" },
+  { title: "Networking", icon: Network, url: "/admin/network" },
+  { title: "Dashboard", icon: LayoutDashboard, url: "/admin/dashboard" },
 ];
 
 interface DashboardSidebarProps {
@@ -51,38 +44,25 @@ const DashboardSidebar = ({ isOpen, setIsOpen }: DashboardSidebarProps) => {
       `}
     >
       <SidebarContent>
-        <div className="flex items-center justify-between p-4">
-          <h1 className={`text-primary font-bold text-xl transition-all duration-300`}>
-            Youth Admin
-          </h1>
-          {isMobile && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsOpen(false)}
-              className="md:hidden"
-            >
-              <X className="h-5 w-5" />
-            </Button>
-          )}
+        <div className="flex items-center p-4">
+          <div className="text-primary text-2xl font-bold">GYA</div>
         </div>
         <SidebarGroup>
-          <SidebarGroupLabel className={!isOpen ? "sr-only" : ""}>
-            Menu
-          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    className="flex items-center w-full px-4 py-2 hover:bg-accent rounded-lg transition-colors"
+                    className="flex items-center w-full px-4 py-2 hover:bg-sidebar-hover rounded-lg transition-colors"
                   >
-                    <Link to={item.url} className="flex items-center space-x-3" onClick={() => isMobile && setIsOpen(false)}>
-                      <item.icon className="w-5 h-5 text-primary flex-shrink-0" />
-                      <span className="transition-all duration-300">
-                        {item.title}
-                      </span>
+                    <Link 
+                      to={item.url} 
+                      className="flex items-center space-x-3"
+                      onClick={() => isMobile && setIsOpen(false)}
+                    >
+                      <item.icon className="w-5 h-5 text-gray-500" />
+                      <span className="text-gray-700">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -90,6 +70,16 @@ const DashboardSidebar = ({ isOpen, setIsOpen }: DashboardSidebarProps) => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        
+        <div className="absolute bottom-4 left-4 right-4">
+          <Button
+            variant="ghost"
+            className="w-full flex items-center justify-start px-4 py-2 text-gray-700 hover:bg-sidebar-hover rounded-lg"
+          >
+            <LogOut className="w-5 h-5 text-gray-500 mr-3" />
+            Logout
+          </Button>
+        </div>
       </SidebarContent>
     </Sidebar>
   );
