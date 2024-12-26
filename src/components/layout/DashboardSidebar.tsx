@@ -18,6 +18,7 @@ import {
   DollarSign,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const menuItems = [
   { title: "Dashboard", icon: Home, url: "/admin" },
@@ -35,10 +36,12 @@ interface DashboardSidebarProps {
 }
 
 const DashboardSidebar = ({ isOpen }: DashboardSidebarProps) => {
+  const isMobile = useIsMobile();
+
   return (
     <Sidebar
-      className={`h-screen bg-white border-r border-gray-200 transition-all duration-300 flex-shrink-0 ${
-        isOpen ? "w-64" : "w-16"
+      className={`h-screen bg-white border-r border-gray-200 transition-all duration-300 ${
+        isOpen ? (isMobile ? "w-full" : "w-64") : "w-16"
       }`}
     >
       <SidebarContent>

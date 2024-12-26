@@ -95,7 +95,7 @@ const AdminDashboard = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-6 w-full">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Admin Control Panel</h1>
           <p className="text-gray-500 mt-2">Welcome back, {auth.getCurrentUser()?.name}</p>
