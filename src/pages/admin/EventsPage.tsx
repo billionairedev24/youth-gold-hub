@@ -183,12 +183,20 @@ const EventsPage = () => {
         </TabsList>
         <TabsContent value="active">
           <Card className="p-6">
-            <EventsTable data={activeEvents} columns={columns} />
+            <EventsTable 
+              data={activeEvents} 
+              columns={columns} 
+              emptyMessage="No scheduled events" 
+            />
           </Card>
         </TabsContent>
         <TabsContent value="archived">
           <Card className="p-6">
-            <EventsTable data={archivedEvents} columns={columns} />
+            <EventsTable 
+              data={archivedEvents} 
+              columns={columns} 
+              emptyMessage="No archived events" 
+            />
           </Card>
         </TabsContent>
       </Tabs>

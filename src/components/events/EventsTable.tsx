@@ -33,9 +33,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 interface EventsTableProps {
   data: Event[];
   columns: ColumnDef<Event>[];
+  emptyMessage?: string;
 }
 
-export function EventsTable({ data, columns }: EventsTableProps) {
+export function EventsTable({ data, columns, emptyMessage = "No events found" }: EventsTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -80,6 +81,14 @@ export function EventsTable({ data, columns }: EventsTableProps) {
       rowSelection,
     },
   });
+
+  if (data.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+        <p className="text-lg text-muted-foreground">{emptyMessage}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -138,32 +147,21 @@ export function EventsTable({ data, columns }: EventsTableProps) {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length + 1}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
+            {table.getRowModel().rows.map((row) => (
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(
+                      cell.column.columnDef.cell,
+                      cell.getContext()
+                    )}
+                  </TableCell>
+                ))}
               </TableRow>
-            )}
+            ))}
           </TableBody>
         </Table>
       </div>
