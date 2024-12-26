@@ -16,6 +16,7 @@ import {
   BarChart2,
   Bell,
   FileText,
+  Lightbulb,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -28,6 +29,7 @@ const menuItems = [
   { title: "Members", icon: Users, url: "/admin/members" },
   { title: "Analytics", icon: BarChart2, url: "/admin/analytics" },
   { title: "Messages", icon: MessageSquare, url: "/admin/messages" },
+  { title: "Suggestions", icon: Lightbulb, url: "/admin/suggestions" },
   { title: "Settings", icon: Settings, url: "/admin/settings" },
 ];
 
