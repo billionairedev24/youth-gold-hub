@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { Link } from "react-router-dom";
-import SuggestionsReview from "@/components/admin/SuggestionsReview";
 
 const AdminDashboard = () => {
   const stats = [
@@ -179,7 +178,6 @@ const AdminDashboard = () => {
             </CardContent>
           </Card>
         </div>
-        <SuggestionsReview />
       </div>
     </DashboardLayout>
   );

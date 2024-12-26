@@ -16,6 +16,7 @@ import {
   Vote,
   Home,
   DollarSign,
+  Lightbulb,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -26,6 +27,7 @@ const menuItems = [
   { title: "Announcements", icon: MessageSquare, url: "/admin/announcements" },
   { title: "Polls", icon: Vote, url: "/admin/polls" },
   { title: "Budget", icon: DollarSign, url: "/admin/budget" },
+  { title: "Suggestions", icon: Lightbulb, url: "/admin/suggestions" },
   { title: "Analytics", icon: BarChart3, url: "/admin/analytics" },
   { title: "Settings", icon: Settings, url: "/admin/settings" },
 ];

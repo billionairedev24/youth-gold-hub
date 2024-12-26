@@ -1,86 +1,34 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import SignInForm from "@/components/auth/SignInForm";
-import SignUpForm from "@/components/auth/SignUpForm";
-import AuthGuard from "@/components/auth/AuthGuard";
-import UserDashboard from "@/pages/UserDashboard";
-import AdminDashboard from "@/pages/AdminDashboard";
-import CreateEvent from "@/pages/admin/CreateEvent";
-import CreatePoll from "@/pages/admin/CreatePoll";
-import CreateAnnouncement from "@/pages/admin/CreateAnnouncement";
-import CreateBudget from "@/pages/admin/CreateBudget";
-import { auth } from "@/lib/auth";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import AdminDashboard from "./pages/AdminDashboard";
+import EventsPage from "./pages/admin/EventsPage";
+import AnnouncementsPage from "./pages/admin/AnnouncementsPage";
+import PollsPage from "./pages/admin/PollsPage";
+import BudgetPage from "./pages/admin/BudgetPage";
+import AnalyticsPage from "./pages/admin/AnalyticsPage";
+import SettingsPage from "./pages/admin/SettingsPage";
+import SuggestionsPage from "./pages/admin/SuggestionsPage";
+import LoginPage from "./pages/LoginPage";
+import { PrivateRoute } from "./components/auth/PrivateRoute";
+import { Toaster } from "./components/ui/toaster";
 
-const App = () => {
-  const currentUser = auth.getCurrentUser();
-  
+function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/signin" element={<SignInForm />} />
-        <Route path="/signup" element={<SignUpForm />} />
-        <Route
-          path="/"
-          element={
-            <AuthGuard>
-              {currentUser?.role === "admin" ? (
-                <Navigate to="/admin" replace />
-              ) : (
-                <Navigate to="/dashboard" replace />
-              )}
-            </AuthGuard>
-          }
-        />
-        <Route
-          path="/admin"
-          element={
-            <AuthGuard allowedRoles={["admin"]}>
-              <AdminDashboard />
-            </AuthGuard>
-          }
-        />
-        <Route
-          path="/admin/events/create"
-          element={
-            <AuthGuard allowedRoles={["admin"]}>
-              <CreateEvent />
-            </AuthGuard>
-          }
-        />
-        <Route
-          path="/admin/polls/create"
-          element={
-            <AuthGuard allowedRoles={["admin"]}>
-              <CreatePoll />
-            </AuthGuard>
-          }
-        />
-        <Route
-          path="/admin/announcements/create"
-          element={
-            <AuthGuard allowedRoles={["admin"]}>
-              <CreateAnnouncement />
-            </AuthGuard>
-          }
-        />
-        <Route
-          path="/admin/budget/create"
-          element={
-            <AuthGuard allowedRoles={["admin"]}>
-              <CreateBudget />
-            </AuthGuard>
-          }
-        />
-        <Route
-          path="/dashboard"
-          element={
-            <AuthGuard allowedRoles={["member"]}>
-              <UserDashboard />
-            </AuthGuard>
-          }
-        />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/admin" element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
+        <Route path="/admin/events" element={<PrivateRoute><EventsPage /></PrivateRoute>} />
+        <Route path="/admin/announcements" element={<PrivateRoute><AnnouncementsPage /></PrivateRoute>} />
+        <Route path="/admin/polls" element={<PrivateRoute><PollsPage /></PrivateRoute>} />
+        <Route path="/admin/budget" element={<PrivateRoute><BudgetPage /></PrivateRoute>} />
+        <Route path="/admin/suggestions" element={<PrivateRoute><SuggestionsPage /></PrivateRoute>} />
+        <Route path="/admin/analytics" element={<PrivateRoute><AnalyticsPage /></PrivateRoute>} />
+        <Route path="/admin/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
+        <Route path="*" element={<LoginPage />} />
       </Routes>
+      <Toaster />
     </Router>
   );
-};
+}
 
 export default App;
