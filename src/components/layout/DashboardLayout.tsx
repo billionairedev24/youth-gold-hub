@@ -15,17 +15,17 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen overflow-hidden">
+      <div className="flex h-screen bg-accent">
         {isAdmin && (
           <DashboardSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
         )}
-        <div className="flex flex-col flex-1">
+        <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
           <DashboardNavbar 
             onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} 
             showMenuButton={isAdmin}
           />
-          <main className="flex-1 overflow-auto bg-accent p-6">
-            <div className="max-w-[1600px] mx-auto">
+          <main className="flex-1 p-6 overflow-y-auto">
+            <div className="container mx-auto max-w-7xl">
               {children}
             </div>
           </main>

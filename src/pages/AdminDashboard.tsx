@@ -29,21 +29,21 @@ const AdminDashboard = () => {
       title: "New Registrations",
       value: "24",
       icon: UserPlus,
-      change: "+8",
+      change: "+15%",
       changeType: "positive",
     },
     {
       title: "Active Events",
       value: "8",
       icon: Calendar,
-      change: "+3",
+      change: "+27%",
       changeType: "positive",
     },
     {
       title: "Pending Approvals",
       value: "12",
       icon: Shield,
-      change: "+5",
+      change: "+20%",
       changeType: "neutral",
     },
   ];
@@ -72,6 +72,24 @@ const AdminDashboard = () => {
       description: "Add new budget entry",
       icon: DollarSign,
       link: "/admin/budget/create"
+    }
+  ];
+
+  const recentActivities = [
+    {
+      icon: UserPlus,
+      title: "New member registration",
+      time: "2 minutes ago"
+    },
+    {
+      icon: Calendar,
+      title: "Youth Bible Study event created",
+      time: "1 hour ago"
+    },
+    {
+      icon: MessageSquare,
+      title: "New announcement posted",
+      time: "3 hours ago"
     }
   ];
 
@@ -138,19 +156,25 @@ const AdminDashboard = () => {
               <h2 className="text-xl font-semibold">Recent Activity</h2>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {[1, 2, 3].map((_, i) => (
-                  <div key={i} className="flex items-center space-x-4 py-2 border-b last:border-0">
-                    <div className="bg-primary/10 p-2 rounded-full">
-                      <MessageSquare className="h-4 w-4 text-primary" />
+              {recentActivities.length > 0 ? (
+                <div className="space-y-4">
+                  {recentActivities.map((activity, index) => (
+                    <div key={index} className="flex items-center space-x-4 py-2 border-b last:border-0">
+                      <div className="bg-primary/10 p-2 rounded-full">
+                        <activity.icon className="h-4 w-4 text-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">{activity.title}</p>
+                        <p className="text-xs text-muted-foreground">{activity.time}</p>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">New user registration</p>
-                      <p className="text-xs text-muted-foreground">2 minutes ago</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-6 text-muted-foreground">
+                  No recent activity to display
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
