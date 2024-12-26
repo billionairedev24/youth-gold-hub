@@ -19,6 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -26,13 +27,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
-import { format } from "date-fns";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useToast } from "@/components/ui/use-toast";
-import { MessageSquare, Check, X } from "lucide-react";
-import { SuggestionCommentsDialog } from "./SuggestionCommentsDialog";
 import { Suggestion } from "@/types/suggestions";
-import { SuggestionsTableToolbar } from "./SuggestionsTableToolbar";
+import { Checkbox } from "@/components/ui/checkbox";
+import { SuggestionActions } from "./SuggestionActions";
+import { format } from "date-fns";
 
 interface SuggestionsTableProps {
   data: Suggestion[];
@@ -43,8 +41,6 @@ export function SuggestionsTable({ data }: SuggestionsTableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const [selectedSuggestion, setSelectedSuggestion] = useState<Suggestion | null>(null);
-  const { toast } = useToast();
 
   const columns: ColumnDef<Suggestion>[] = [
     {
@@ -109,6 +105,10 @@ export function SuggestionsTable({ data }: SuggestionsTableProps) {
         );
       },
     },
+    {
+      id: "actions",
+      cell: ({ row }) => <SuggestionActions suggestion={row.original} />,
+    },
   ];
 
   const table = useReactTable({
@@ -140,7 +140,40 @@ export function SuggestionsTable({ data }: SuggestionsTableProps) {
 
   return (
     <div className="space-y-4">
-      <SuggestionsTableToolbar table={table} />
+      <div className="flex items-center gap-4">
+        <Input
+          placeholder="Filter title..."
+          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("title")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">Columns</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                );
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       <div className="rounded-md">
         <Table>
           <TableHeader>
@@ -199,12 +232,6 @@ export function SuggestionsTable({ data }: SuggestionsTableProps) {
           Next
         </Button>
       </div>
-
-      <SuggestionCommentsDialog
-        suggestion={selectedSuggestion}
-        open={!!selectedSuggestion}
-        onOpenChange={(open) => !open && setSelectedSuggestion(null)}
-      />
     </div>
   );
 }
