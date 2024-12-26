@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Trash2 } from "lucide-react";
+import { Trash2, Lightbulb } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,18 +7,31 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Bell } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface Notification {
   id: string;
   message: string;
   time: string;
+  type: 'suggestion' | 'general';
+  link?: string;
 }
 
 export const NotificationsDropdown = () => {
   const [notifications, setNotifications] = useState<Notification[]>([
-    { id: "1", message: "New prayer request from John", time: "5m ago" },
-    { id: "2", message: "Youth meeting tomorrow at 7 PM", time: "1h ago" },
-    { id: "3", message: "Sarah commented on your prayer request", time: "2h ago" },
+    { 
+      id: "1", 
+      message: "New suggestion from John: Weekly Youth Game Night", 
+      time: "5m ago",
+      type: 'suggestion',
+      link: '/admin/suggestions'
+    },
+    { 
+      id: "2", 
+      message: "Youth meeting tomorrow at 7 PM", 
+      time: "1h ago",
+      type: 'general'
+    },
   ]);
 
   const deleteNotification = (id: string) => {
@@ -53,7 +66,16 @@ export const NotificationsDropdown = () => {
                 className="flex items-center justify-between px-4 py-3 hover:bg-accent border-b last:border-b-0"
               >
                 <div className="flex flex-col gap-1">
-                  <span className="text-sm">{notification.message}</span>
+                  {notification.link ? (
+                    <Link to={notification.link} className="text-sm hover:text-primary">
+                      <span className="flex items-center gap-2">
+                        {notification.type === 'suggestion' && <Lightbulb className="h-4 w-4" />}
+                        {notification.message}
+                      </span>
+                    </Link>
+                  ) : (
+                    <span className="text-sm">{notification.message}</span>
+                  )}
                   <span className="text-xs text-gray-500">
                     {notification.time}
                   </span>
