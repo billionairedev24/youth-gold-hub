@@ -6,6 +6,7 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useState } from "react";
 import PollVote from "@/components/polls/PollVote";
 import AddPrayerRequest from "@/components/prayers/AddPrayerRequest";
+import EventsTableDialog from "@/components/events/EventsTableDialog";
 
 interface Widget {
   id: string;
