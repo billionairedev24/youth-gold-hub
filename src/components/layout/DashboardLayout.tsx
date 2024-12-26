@@ -35,7 +35,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen overflow-hidden bg-background">
+      <div className="flex h-screen bg-background">
         {isAdmin && (
           <DashboardSidebar 
             isOpen={isSidebarOpen} 
@@ -46,7 +46,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           flex-1 flex flex-col 
           transition-all duration-300
           ${isAdmin ? (isSidebarOpen ? 'ml-64' : 'ml-16') : 'ml-0'}
-          ${isMobile && isSidebarOpen ? 'overflow-hidden' : ''}
         `}>
           <DashboardNavbar 
             onMenuClick={handleSidebarToggle} 
