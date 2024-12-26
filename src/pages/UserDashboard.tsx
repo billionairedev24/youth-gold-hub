@@ -7,6 +7,7 @@ import { useState } from "react";
 import PollVote from "@/components/polls/PollVote";
 import { PrayerRequestsWidget } from "@/components/prayers/PrayerRequestsWidget";
 import EventsTableDialog from "@/components/events/EventsTableDialog";
+import { SuggestionsWidget } from "@/components/suggestions/SuggestionsWidget";
 
 interface Widget {
   id: string;
@@ -132,6 +133,10 @@ const UserDashboard = () => {
           </Card>
         </div>
       )
+    },
+    {
+      id: "suggestions",
+      content: <SuggestionsWidget />
     }
   ]);
 
