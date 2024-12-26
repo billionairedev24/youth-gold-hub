@@ -1,4 +1,16 @@
 import {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import {
   Table,
   TableBody,
   TableCell,
@@ -6,30 +18,117 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { format } from "date-fns";
-import { Suggestion } from "@/types/suggestions";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Check, X } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import { format } from "date-fns";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useToast } from "@/components/ui/use-toast";
+import { MessageSquare, Check, X } from "lucide-react";
 import { SuggestionCommentsDialog } from "./SuggestionCommentsDialog";
-import { useToast } from "@/hooks/use-toast";
+import { Suggestion } from "@/types/suggestions";
+import { SuggestionsTableToolbar } from "./SuggestionsTableToolbar";
 
 interface SuggestionsTableProps {
   data: Suggestion[];
 }
 
 export function SuggestionsTable({ data }: SuggestionsTableProps) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
   const [selectedSuggestion, setSelectedSuggestion] = useState<Suggestion | null>(null);
   const { toast } = useToast();
 
-  const handleStatusChange = (suggestion: Suggestion, newStatus: 'approved' | 'rejected') => {
-    // Handle status change logic here
-    toast({
-      title: `Suggestion ${newStatus}`,
-      description: `The suggestion has been ${newStatus}.`,
-    });
-  };
+  const columns: ColumnDef<Suggestion>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={table.getIsAllPageRowsSelected()}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "title",
+      header: "Title",
+      cell: ({ row }) => <div className="font-medium">{row.getValue("title")}</div>,
+    },
+    {
+      accessorKey: "description",
+      header: "Description",
+      cell: ({ row }) => (
+        <div className="max-w-[400px] truncate">{row.getValue("description")}</div>
+      ),
+    },
+    {
+      accessorKey: "authorName",
+      header: "Author",
+    },
+    {
+      accessorKey: "createdAt",
+      header: "Created At",
+      cell: ({ row }) => format(row.original.createdAt, "PPP"),
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => {
+        const status = row.getValue("status") as string;
+        const getStatusColor = (status: string) => {
+          switch (status) {
+            case "approved":
+              return "bg-green-100 text-green-800";
+            case "rejected":
+              return "bg-red-100 text-red-800";
+            default:
+              return "bg-yellow-100 text-yellow-800";
+          }
+        };
+        return (
+          <span className={`px-2 py-1 rounded-full text-xs ${getStatusColor(status)}`}>
+            {status.charAt(0).toUpperCase() + status.slice(1)}
+          </span>
+        );
+      },
+    },
+  ];
+
+  const table = useReactTable({
+    data,
+    columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
+  });
 
   if (data.length === 0) {
     return (
@@ -39,87 +138,73 @@ export function SuggestionsTable({ data }: SuggestionsTableProps) {
     );
   }
 
-  const getStatusColor = (status: Suggestion["status"]) => {
-    switch (status) {
-      case "approved":
-        return "bg-green-100 text-green-800";
-      case "rejected":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-yellow-100 text-yellow-800";
-    }
-  };
-
   return (
-    <>
-      <div className="rounded-md border">
+    <div className="space-y-4">
+      <SuggestionsTableToolbar table={table} />
+      <div className="rounded-md">
         <Table>
           <TableHeader>
-            <TableRow className="bg-muted/50">
-              <TableHead className="w-[200px]">Title</TableHead>
-              <TableHead className="max-w-[400px]">Description</TableHead>
-              <TableHead>Author</TableHead>
-              <TableHead>Created At</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
           </TableHeader>
           <TableBody>
-            {data.map((suggestion) => (
-              <TableRow key={suggestion.id}>
-                <TableCell className="font-medium">{suggestion.title}</TableCell>
-                <TableCell className="max-w-[400px] truncate">
-                  {suggestion.description}
-                </TableCell>
-                <TableCell>{suggestion.authorName}</TableCell>
-                <TableCell>{format(suggestion.createdAt, "PPP")}</TableCell>
-                <TableCell>
-                  <span className={`px-2 py-1 rounded-full text-xs ${getStatusColor(suggestion.status)}`}>
-                    {suggestion.status.charAt(0).toUpperCase() + suggestion.status.slice(1)}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <div className="flex justify-end gap-2">
-                    {suggestion.status === 'pending' && (
-                      <>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleStatusChange(suggestion, 'approved')}
-                          className="text-green-600 hover:text-green-700"
-                        >
-                          <Check className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleStatusChange(suggestion, 'rejected')}
-                          className="text-red-600 hover:text-red-700"
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </>
-                    )}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setSelectedSuggestion(suggestion)}
-                    >
-                      <MessageSquare className="h-4 w-4" />
-                      <span className="ml-2">{suggestion.comments.length}</span>
-                    </Button>
-                  </div>
-                </TableCell>
+            {table.getRowModel().rows.map((row) => (
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
+      <div className="flex items-center justify-end space-x-2">
+        <div className="flex-1 text-sm text-muted-foreground">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          Previous
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Next
+        </Button>
+      </div>
+
       <SuggestionCommentsDialog
         suggestion={selectedSuggestion}
         open={!!selectedSuggestion}
         onOpenChange={(open) => !open && setSelectedSuggestion(null)}
       />
-    </>
+    </div>
   );
 }
