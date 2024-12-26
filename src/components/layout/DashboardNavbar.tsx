@@ -29,6 +29,12 @@ const DashboardNavbar = ({ onMenuClick, showMenuButton = false }: DashboardNavba
               <Menu className="h-5 w-5" />
             </Button>
           )}
+          <div className="flex items-center space-x-2">
+            <div className="bg-primary rounded-full p-2">
+              <span className="text-white font-bold text-lg">GYA</span>
+            </div>
+            <span className="text-xl font-semibold text-gray-900">Youth Admin</span>
+          </div>
         </div>
         
         <div className="flex items-center space-x-4">
