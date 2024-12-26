@@ -1,25 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { CreateEventDialog } from "@/components/events/CreateEventDialog";
 import { Button } from "@/components/ui/button";
-import {
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-  getPaginationRowModel,
-  getSortedRowModel,
-  getFilteredRowModel,
-  ColumnDef,
-} from "@tanstack/react-table";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { ColumnDef } from "@tanstack/react-table";
 import { Archive, Download, Edit, MoreHorizontal, Trash } from "lucide-react";
 import {
   DropdownMenu,
@@ -28,17 +10,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
-
-interface Event {
-  id: string;
-  what: string;
-  objectives: string;
-  personnel: string;
-  where: string;
-  when: string;
-  time: string;
-  status: 'active' | 'archived';
-}
+import { useState } from "react";
+import { Event } from "@/types/events";
+import { EventsTable } from "@/components/events/EventsTable";
+import { EditEventDialog } from "@/components/events/EditEventDialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const mockEvents: Event[] = [
   {
@@ -65,105 +41,38 @@ const mockEvents: Event[] = [
 
 const EventsPage = () => {
   const [data, setData] = useState<Event[]>(mockEvents);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   const { toast } = useToast();
 
   const columns: ColumnDef<Event>[] = [
     {
       accessorKey: "what",
       header: "What",
-      cell: ({ row }) => {
-        const isEditing = row.original.id === editingId;
-        return isEditing ? (
-          <Input
-            defaultValue={row.original.what}
-            onChange={(e) => handleEdit(row.original.id, "what", e.target.value)}
-          />
-        ) : (
-          row.original.what
-        );
-      },
     },
     {
       accessorKey: "objectives",
       header: "Objective(s)",
-      cell: ({ row }) => {
-        const isEditing = row.original.id === editingId;
-        return isEditing ? (
-          <Input
-            defaultValue={row.original.objectives}
-            onChange={(e) => handleEdit(row.original.id, "objectives", e.target.value)}
-          />
-        ) : (
-          row.original.objectives
-        );
-      },
     },
     {
       accessorKey: "personnel",
       header: "Personnel",
-      cell: ({ row }) => {
-        const isEditing = row.original.id === editingId;
-        return isEditing ? (
-          <Input
-            defaultValue={row.original.personnel}
-            onChange={(e) => handleEdit(row.original.id, "personnel", e.target.value)}
-          />
-        ) : (
-          row.original.personnel
-        );
-      },
     },
     {
       accessorKey: "where",
       header: "Where",
-      cell: ({ row }) => {
-        const isEditing = row.original.id === editingId;
-        return isEditing ? (
-          <Input
-            defaultValue={row.original.where}
-            onChange={(e) => handleEdit(row.original.id, "where", e.target.value)}
-          />
-        ) : (
-          row.original.where
-        );
-      },
     },
     {
       accessorKey: "when",
       header: "When",
-      cell: ({ row }) => {
-        const isEditing = row.original.id === editingId;
-        return isEditing ? (
-          <Input
-            defaultValue={row.original.when}
-            onChange={(e) => handleEdit(row.original.id, "when", e.target.value)}
-          />
-        ) : (
-          row.original.when
-        );
-      },
     },
     {
       accessorKey: "time",
       header: "Time",
-      cell: ({ row }) => {
-        const isEditing = row.original.id === editingId;
-        return isEditing ? (
-          <Input
-            defaultValue={row.original.time}
-            onChange={(e) => handleEdit(row.original.id, "time", e.target.value)}
-          />
-        ) : (
-          row.original.time
-        );
-      },
     },
     {
       id: "actions",
       cell: ({ row }) => {
-        const isEditing = row.original.id === editingId;
-        const isArchived = row.original.status === 'archived';
+        const event = row.original;
         
         return (
           <DropdownMenu>
@@ -173,23 +82,15 @@ const EventsPage = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {isEditing ? (
-                <DropdownMenuItem onClick={() => setEditingId(null)}>
-                  Save
-                </DropdownMenuItem>
-              ) : (
-                <DropdownMenuItem onClick={() => setEditingId(row.original.id)}>
-                  <Edit className="mr-2 h-4 w-4" />
-                  Edit
-                </DropdownMenuItem>
-              )}
-              {!isArchived && (
-                <DropdownMenuItem onClick={() => handleArchive(row.original.id)}>
-                  <Archive className="mr-2 h-4 w-4" />
-                  Archive
-                </DropdownMenuItem>
-              )}
-              <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>
+              <DropdownMenuItem onClick={() => setEditingEvent(event)}>
+                <Edit className="mr-2 h-4 w-4" />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleArchive(event.id)}>
+                <Archive className="mr-2 h-4 w-4" />
+                Archive
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDelete(event.id)}>
                 <Trash className="mr-2 h-4 w-4" />
                 Delete
               </DropdownMenuItem>
@@ -199,23 +100,6 @@ const EventsPage = () => {
       },
     },
   ];
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-  });
-
-  const handleEdit = (id: string, field: string, value: string) => {
-    setData((prev) =>
-      prev.map((event) =>
-        event.id === id ? { ...event, [field]: value } : event
-      )
-    );
-  };
 
   const handleArchive = (id: string) => {
     setData((prev) =>
@@ -234,6 +118,18 @@ const EventsPage = () => {
     toast({
       title: "Event Deleted",
       description: "The event has been deleted successfully.",
+    });
+  };
+
+  const handleSaveEdit = (updatedEvent: Event) => {
+    setData((prev) =>
+      prev.map((event) =>
+        event.id === updatedEvent.id ? updatedEvent : event
+      )
+    );
+    toast({
+      title: "Event Updated",
+      description: "The event has been updated successfully.",
     });
   };
 
@@ -264,9 +160,12 @@ const EventsPage = () => {
     document.body.removeChild(link);
   };
 
+  const activeEvents = data.filter(event => event.status === 'active');
+  const archivedEvents = data.filter(event => event.status === 'archived');
+
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="p-6 max-w-[100vw]">
+      <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Events</h1>
         <div className="flex gap-2">
           <Button onClick={exportToCSV} variant="outline">
@@ -277,58 +176,29 @@ const EventsPage = () => {
         </div>
       </div>
 
-      <Card className="p-6">
-        <div className="rounded-md border">
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center"
-                    >
-                      No events found.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </div>
-      </Card>
+      <Tabs defaultValue="active" className="w-full">
+        <TabsList>
+          <TabsTrigger value="active">Active Events</TabsTrigger>
+          <TabsTrigger value="archived">Archived Events</TabsTrigger>
+        </TabsList>
+        <TabsContent value="active">
+          <Card className="p-6">
+            <EventsTable data={activeEvents} columns={columns} />
+          </Card>
+        </TabsContent>
+        <TabsContent value="archived">
+          <Card className="p-6">
+            <EventsTable data={archivedEvents} columns={columns} />
+          </Card>
+        </TabsContent>
+      </Tabs>
+
+      <EditEventDialog
+        event={editingEvent}
+        open={!!editingEvent}
+        onOpenChange={(open) => !open && setEditingEvent(null)}
+        onSave={handleSaveEdit}
+      />
     </div>
   );
 };

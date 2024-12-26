@@ -82,3 +82,19 @@
 [role="menu"] {
   @apply bg-white;
 }
+
+/* Remove table borders */
+.table {
+  @apply border-collapse;
+}
+
+.table td,
+.table th {
+  @apply border-0;
+}
+
+/* Ensure content fits without horizontal scroll */
+.max-w-\[100vw\] {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
