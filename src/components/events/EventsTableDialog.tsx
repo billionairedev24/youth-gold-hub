@@ -14,12 +14,12 @@ import {
 } from "@/components/ui/table";
 
 interface Event {
-  id: string;
-  title: string;
-  date: string;
+  what: string;
+  objectives: string;
+  personnel: string;
+  where: string;
+  when: string;
   time: string;
-  location: string;
-  attendees: number;
 }
 
 interface EventsTableDialogProps {
@@ -29,36 +29,20 @@ interface EventsTableDialogProps {
 
 const mockEvents: Event[] = [
   {
-    id: "1",
-    title: "Youth Bible Study",
-    date: "March 20, 2024",
-    time: "7:00 PM",
-    location: "Main Hall",
-    attendees: 15,
+    what: "[Interactive Discussion] Growing with Jesus",
+    objectives: "Deepen our faith in God and love for Jesus as His disciples.",
+    personnel: "Sis. Brittany (facilitator)",
+    where: "Church Auditorium",
+    when: "1/20",
+    time: "3-4:30 p.m.",
   },
   {
-    id: "2",
-    title: "Worship Night",
-    date: "March 23, 2024",
-    time: "6:30 PM",
-    location: "Sanctuary",
-    attendees: 25,
-  },
-  {
-    id: "3",
-    title: "Community Service",
-    date: "March 25, 2024",
-    time: "9:00 AM",
-    location: "Community Center",
-    attendees: 10,
-  },
-  {
-    id: "4",
-    title: "Young Adults Fellowship",
-    date: "March 27, 2024",
-    time: "7:30 PM",
-    location: "Fellowship Hall",
-    attendees: 20,
+    what: "[Interactive Discussion] Dating: A Kingdom or Secular Culture?",
+    objectives: "Examine the concept of dating through the lens of a kingdom perspective",
+    personnel: "Sis. Tosin & Bro. Bryan (facilitators)",
+    where: "The Odeyemis' Home",
+    when: "2/17",
+    time: "3-4:30 p.m.",
   },
 ];
 
@@ -73,21 +57,23 @@ const EventsTableDialog = ({ open, onOpenChange }: EventsTableDialogProps) => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Event</TableHead>
-                <TableHead>Date</TableHead>
+                <TableHead className="w-[300px]">What</TableHead>
+                <TableHead className="min-w-[300px]">Objective(s)</TableHead>
+                <TableHead>Personnel</TableHead>
+                <TableHead>Where</TableHead>
+                <TableHead>When</TableHead>
                 <TableHead>Time</TableHead>
-                <TableHead>Location</TableHead>
-                <TableHead>Attendees</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockEvents.map((event) => (
-                <TableRow key={event.id}>
-                  <TableCell className="font-medium">{event.title}</TableCell>
-                  <TableCell>{event.date}</TableCell>
+              {mockEvents.map((event, index) => (
+                <TableRow key={index}>
+                  <TableCell className="font-medium">{event.what}</TableCell>
+                  <TableCell>{event.objectives}</TableCell>
+                  <TableCell>{event.personnel}</TableCell>
+                  <TableCell>{event.where}</TableCell>
+                  <TableCell>{event.when}</TableCell>
                   <TableCell>{event.time}</TableCell>
-                  <TableCell>{event.location}</TableCell>
-                  <TableCell>{event.attendees}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
