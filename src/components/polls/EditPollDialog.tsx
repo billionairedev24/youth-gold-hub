@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Poll } from "@/types/polls";
 import { Plus, Minus } from "lucide-react";
 
@@ -36,6 +36,15 @@ export function EditPollDialog({
   const [endDate, setEndDate] = useState(
     poll?.endDate.toISOString().split("T")[0] || ""
   );
+
+  useEffect(() => {
+    if (poll) {
+      setTitle(poll.title);
+      setOptions(poll.options.map((opt) => ({ ...opt })));
+      setStartDate(poll.startDate.toISOString().split("T")[0]);
+      setEndDate(poll.endDate.toISOString().split("T")[0]);
+    }
+  }, [poll]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
