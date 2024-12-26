@@ -27,12 +27,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
-import { Announcement } from "@/types/announcements";
 import { format } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
 import { ViewAnnouncementDialog } from "./ViewAnnouncementDialog";
 import { EditAnnouncementDialog } from "./EditAnnouncementDialog";
+import { MoreHorizontal, Eye, Edit } from "lucide-react";
+import { Announcement } from "@/types/announcements";
 
 interface AnnouncementsTableProps {
   data: Announcement[];
