@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Menu } from "lucide-react";
+import { Menu, Bell, Search } from "lucide-react";
 import UserMenu from "./navbar/UserMenu";
 import ProfileDialog from "./navbar/ProfileDialog";
 import SettingsDialog from "./navbar/SettingsDialog";
 import { NotificationsDropdown } from "./navbar/NotificationsDropdown";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Input } from "@/components/ui/input";
 
 interface DashboardNavbarProps {
   onMenuClick?: () => void;
@@ -32,13 +33,25 @@ const DashboardNavbar = ({ onMenuClick, showMenuButton = false }: DashboardNavba
               <Menu className="h-5 w-5" />
             </Button>
           )}
-          <div className="bg-primary w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center overflow-hidden">
-            <span className="text-white font-bold text-sm md:text-xl">GYA</span>
-          </div>
+          {!isMobile && (
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                type="search"
+                placeholder="Search..."
+                className="pl-10 w-[300px] bg-accent focus:bg-white"
+              />
+            </div>
+          )}
         </div>
         
         <div className="flex items-center space-x-2 md:space-x-4">
           {!isMobile && <NotificationsDropdown />}
+          {isMobile && (
+            <Button variant="ghost" size="icon" className="hover:bg-accent">
+              <Bell className="h-5 w-5" />
+            </Button>
+          )}
           
           <UserMenu
             profileImage={profileImage}

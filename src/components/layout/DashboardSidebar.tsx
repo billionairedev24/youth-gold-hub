@@ -9,22 +9,27 @@ import {
 } from "@/components/ui/sidebar";
 import {
   LayoutDashboard,
+  Calendar,
+  MessageSquare,
+  Users,
+  Settings,
   BarChart2,
-  Cloud,
-  Network,
-  Home,
-  LogOut,
+  Bell,
+  FileText,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 
 const menuItems = [
-  { title: "Main", icon: Home, url: "/admin" },
+  { title: "Dashboard", icon: LayoutDashboard, url: "/admin" },
+  { title: "Events", icon: Calendar, url: "/admin/events" },
+  { title: "Announcements", icon: Bell, url: "/admin/announcements" },
+  { title: "Polls", icon: FileText, url: "/admin/polls" },
+  { title: "Members", icon: Users, url: "/admin/members" },
   { title: "Analytics", icon: BarChart2, url: "/admin/analytics" },
-  { title: "Cloud Storage", icon: Cloud, url: "/admin/storage" },
-  { title: "Networking", icon: Network, url: "/admin/network" },
-  { title: "Dashboard", icon: LayoutDashboard, url: "/admin/dashboard" },
+  { title: "Messages", icon: MessageSquare, url: "/admin/messages" },
+  { title: "Settings", icon: Settings, url: "/admin/settings" },
 ];
 
 interface DashboardSidebarProps {
@@ -61,7 +66,7 @@ const DashboardSidebar = ({ isOpen, setIsOpen }: DashboardSidebarProps) => {
                       className="flex items-center space-x-3"
                       onClick={() => isMobile && setIsOpen(false)}
                     >
-                      <item.icon className="w-5 h-5 text-gray-500" />
+                      <item.icon className="w-5 h-5 text-primary" />
                       <span className="text-gray-700">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
@@ -70,16 +75,6 @@ const DashboardSidebar = ({ isOpen, setIsOpen }: DashboardSidebarProps) => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        
-        <div className="absolute bottom-4 left-4 right-4">
-          <Button
-            variant="ghost"
-            className="w-full flex items-center justify-start px-4 py-2 text-gray-700 hover:bg-sidebar-hover rounded-lg"
-          >
-            <LogOut className="w-5 h-5 text-gray-500 mr-3" />
-            Logout
-          </Button>
-        </div>
       </SidebarContent>
     </Sidebar>
   );
