@@ -5,13 +5,18 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 
-const AddPrayerRequest = () => {
+interface AddPrayerRequestProps {
+  onSubmit: (title: string, description: string) => void;
+}
+
+const AddPrayerRequest = ({ onSubmit }: AddPrayerRequestProps) => {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -20,8 +25,7 @@ const AddPrayerRequest = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Mock API call to submit prayer request
-    console.log("Submitting prayer request:", { title, description });
+    onSubmit(title, description);
     
     toast({
       title: "Prayer request submitted",
@@ -43,6 +47,9 @@ const AddPrayerRequest = () => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Share Prayer Request</DialogTitle>
+          <DialogDescription>
+            Share your prayer request with the community. Others will be notified and can pray with you.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">

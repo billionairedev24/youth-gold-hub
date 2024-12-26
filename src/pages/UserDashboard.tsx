@@ -1,11 +1,11 @@
 import { Card } from "@/components/ui/card";
-import { Calendar, MessageSquare, Bell, Heart, ArrowRight } from "lucide-react";
+import { Calendar, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import DashboardNavbar from "@/components/layout/DashboardNavbar";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useState } from "react";
 import PollVote from "@/components/polls/PollVote";
-import AddPrayerRequest from "@/components/prayers/AddPrayerRequest";
+import { PrayerRequestsWidget } from "@/components/prayers/PrayerRequestsWidget";
 import EventsTableDialog from "@/components/events/EventsTableDialog";
 
 interface Widget {
@@ -109,32 +109,7 @@ const UserDashboard = () => {
     },
     {
       id: "prayer-requests",
-      content: (
-        <div>
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">Prayer Requests</h2>
-          </div>
-          <Card className="p-6">
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <Heart className="text-red-500 h-5 w-5" />
-                <div>
-                  <p className="font-medium">Upcoming Exams</p>
-                  <p className="text-sm text-gray-500">3 people praying</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <Heart className="text-red-500 h-5 w-5" />
-                <div>
-                  <p className="font-medium">Family Health</p>
-                  <p className="text-sm text-gray-500">5 people praying</p>
-                </div>
-              </div>
-              <AddPrayerRequest />
-            </div>
-          </Card>
-        </div>
-      )
+      content: <PrayerRequestsWidget />
     },
     {
       id: "recent-activity",

@@ -16,8 +16,10 @@ interface PollVoteProps {
   hasVoted: boolean;
 }
 
-const PollVote = ({ pollId, question, options, onVote, hasVoted }: PollVoteProps) => {
+const PollVote = ({ pollId, question, options: initialOptions, onVote, hasVoted: initialHasVoted }: PollVoteProps) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [options, setOptions] = useState<PollOption[]>(initialOptions);
+  const [hasVoted, setHasVoted] = useState(initialHasVoted);
   const { toast } = useToast();
 
   const handleVote = () => {
@@ -29,7 +31,17 @@ const PollVote = ({ pollId, question, options, onVote, hasVoted }: PollVoteProps
       return;
     }
 
+    // Update local state
+    setOptions(options.map(option => 
+      option.id === selectedOption 
+        ? { ...option, votes: option.votes + 1 }
+        : option
+    ));
+    setHasVoted(true);
+
+    // Notify parent component
     onVote(pollId, selectedOption);
+
     toast({
       title: "Vote submitted successfully!",
       description: "Thank you for participating in the poll.",
@@ -53,7 +65,7 @@ const PollVote = ({ pollId, question, options, onVote, hasVoted }: PollVoteProps
                 onClick={() => !hasVoted && setSelectedOption(option.id)}
                 disabled={hasVoted}
               >
-                {option.text}
+                <span>{option.text}</span>
                 {hasVoted && (
                   <span className="text-sm text-gray-500">
                     {percentage.toFixed(1)}%
