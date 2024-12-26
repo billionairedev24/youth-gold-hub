@@ -45,7 +45,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <div className={`
           flex-1 flex flex-col 
           transition-all duration-300
-          ${isSidebarOpen ? (isMobile ? 'ml-0' : 'ml-64') : 'ml-0'}
+          ${isAdmin ? (isSidebarOpen ? 'ml-64' : 'ml-16') : 'ml-0'}
           ${isMobile && isSidebarOpen ? 'overflow-hidden' : ''}
         `}>
           <DashboardNavbar 

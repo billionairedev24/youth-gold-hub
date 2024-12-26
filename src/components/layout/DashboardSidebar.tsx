@@ -19,7 +19,6 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Button } from "@/components/ui/button";
 
 const menuItems = [
   { title: "Dashboard", icon: LayoutDashboard, url: "/admin" },
@@ -44,12 +43,12 @@ const DashboardSidebar = ({ isOpen, setIsOpen }: DashboardSidebarProps) => {
     <Sidebar
       className={`
         fixed top-0 left-0 z-40 h-screen bg-white border-r border-gray-200
-        transition-all duration-300 
-        ${isOpen ? (isMobile ? 'w-full' : 'w-64') : 'w-0 -translate-x-full'}
+        transition-all duration-300 overflow-hidden
+        ${isOpen ? (isMobile ? 'w-full' : 'w-64') : 'w-16'}
       `}
     >
       <SidebarContent>
-        <div className="flex items-center p-4">
+        <div className={`flex items-center p-4 ${!isOpen ? 'justify-center' : ''}`}>
           <div className="text-primary text-2xl font-bold">GYA</div>
         </div>
         <SidebarGroup>
@@ -59,15 +58,18 @@ const DashboardSidebar = ({ isOpen, setIsOpen }: DashboardSidebarProps) => {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    className="flex items-center w-full px-4 py-2 hover:bg-sidebar-hover rounded-lg transition-colors"
+                    className={`
+                      flex items-center w-full px-4 py-2 hover:bg-sidebar-hover rounded-lg transition-colors
+                      ${!isOpen ? 'justify-center' : ''}
+                    `}
                   >
                     <Link 
                       to={item.url} 
-                      className="flex items-center space-x-3"
+                      className={`flex items-center ${isOpen ? 'space-x-3' : ''}`}
                       onClick={() => isMobile && setIsOpen(false)}
                     >
                       <item.icon className="w-5 h-5 text-primary" />
-                      <span className="text-gray-700">{item.title}</span>
+                      {isOpen && <span className="text-gray-700">{item.title}</span>}
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
