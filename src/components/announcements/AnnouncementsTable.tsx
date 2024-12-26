@@ -29,6 +29,10 @@ import {
 import { useState } from "react";
 import { Announcement } from "@/types/announcements";
 import { format } from "date-fns";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useToast } from "@/components/ui/use-toast";
+import { ViewAnnouncementDialog } from "./ViewAnnouncementDialog";
+import { EditAnnouncementDialog } from "./EditAnnouncementDialog";
 
 interface AnnouncementsTableProps {
   data: Announcement[];
@@ -38,8 +42,31 @@ export function AnnouncementsTable({ data }: AnnouncementsTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+  const [viewingAnnouncement, setViewingAnnouncement] = useState<Announcement | null>(null);
+  const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null>(null);
+  const { toast } = useToast();
 
   const columns: ColumnDef<Announcement>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={table.getIsAllPageRowsSelected()}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
     {
       accessorKey: "content",
       header: "Announcement",
@@ -48,6 +75,32 @@ export function AnnouncementsTable({ data }: AnnouncementsTableProps) {
       accessorKey: "createdAt",
       header: "Created At",
       cell: ({ row }) => format(row.original.createdAt, "PPP"),
+    },
+    {
+      id: "actions",
+      cell: ({ row }) => {
+        const announcement = row.original;
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuCheckboxItem onClick={() => setViewingAnnouncement(announcement)}>
+                <Eye className="mr-2 h-4 w-4" />
+                View Details
+              </DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem onClick={() => setEditingAnnouncement(announcement)}>
+                <Edit className="mr-2 h-4 w-4" />
+                Edit
+              </DropdownMenuCheckboxItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
     },
   ];
 
@@ -61,10 +114,12 @@ export function AnnouncementsTable({ data }: AnnouncementsTableProps) {
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
+      rowSelection,
     },
   });
 
@@ -112,7 +167,7 @@ export function AnnouncementsTable({ data }: AnnouncementsTableProps) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="table-container">
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -134,7 +189,10 @@ export function AnnouncementsTable({ data }: AnnouncementsTableProps) {
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
+              >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -146,6 +204,10 @@ export function AnnouncementsTable({ data }: AnnouncementsTableProps) {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2">
+        <div className="flex-1 text-sm text-muted-foreground">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div>
         <Button
           variant="outline"
           size="sm"
@@ -163,6 +225,25 @@ export function AnnouncementsTable({ data }: AnnouncementsTableProps) {
           Next
         </Button>
       </div>
+
+      <ViewAnnouncementDialog
+        announcement={viewingAnnouncement}
+        open={!!viewingAnnouncement}
+        onOpenChange={(open) => !open && setViewingAnnouncement(null)}
+      />
+
+      <EditAnnouncementDialog
+        announcement={editingAnnouncement}
+        open={!!editingAnnouncement}
+        onOpenChange={(open) => !open && setEditingAnnouncement(null)}
+        onSave={(announcement) => {
+          toast({
+            title: "Announcement Updated",
+            description: "The announcement has been updated successfully.",
+          });
+          setEditingAnnouncement(null);
+        }}
+      />
     </div>
   );
 }
