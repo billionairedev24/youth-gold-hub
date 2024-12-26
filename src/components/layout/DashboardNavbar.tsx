@@ -19,7 +19,7 @@ const DashboardNavbar = ({ onMenuClick, showMenuButton = false }: DashboardNavba
     <nav className="w-full bg-white border-b border-gray-200 shrink-0">
       <div className="h-16 px-4 flex items-center justify-between">
         <div className="flex items-center">
-          <div className="bg-primary rounded-full p-3">
+          <div className="bg-primary rounded-full w-10 h-10 flex items-center justify-center">
             <span className="text-white font-bold text-xl">GYA</span>
           </div>
         </div>

@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import DashboardNavbar from "@/components/layout/DashboardNavbar";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useState } from "react";
+import PollVote from "@/components/polls/PollVote";
+import AddPrayerRequest from "@/components/prayers/AddPrayerRequest";
 
 interface Widget {
   id: string;
@@ -31,6 +33,22 @@ const UserDashboard = () => {
     { text: "Submitted a new suggestion", color: "bg-blue-500" },
     { text: "RSVP'd to Youth Bible Study", color: "bg-purple-500" }
   ];
+
+  const [hasVoted, setHasVoted] = useState(false);
+  const mockPoll = {
+    id: "1",
+    question: "What time would you prefer for our weekly youth meetings?",
+    options: [
+      { id: "1", text: "6:00 PM", votes: 5 },
+      { id: "2", text: "7:00 PM", votes: 8 },
+      { id: "3", text: "8:00 PM", votes: 3 },
+    ]
+  };
+
+  const handleVote = (pollId: string, optionId: string) => {
+    console.log("Vote submitted:", { pollId, optionId });
+    setHasVoted(true);
+  };
 
   const [widgets, setWidgets] = useState<Widget[]>([
     {
@@ -67,27 +85,15 @@ const UserDashboard = () => {
         <div>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Active Poll</h2>
-            <Button variant="link" className="text-primary">View All Polls</Button>
           </div>
           <Card className="p-6">
-            <div className="flex justify-between items-start mb-4">
-              <h3 className="font-semibold">What time would you prefer for our weekly youth meetings?</h3>
-              <span className="text-sm text-gray-500">Ends in 2 days</span>
-            </div>
-            <div className="space-y-3">
-              <Button variant="outline" className="w-full justify-between">
-                6:00 PM
-                <span className="bg-primary/10 p-1 rounded">
-                  <MessageSquare className="h-4 w-4 text-primary" />
-                </span>
-              </Button>
-              <Button variant="outline" className="w-full justify-between">
-                7:00 PM
-                <span className="bg-primary/10 p-1 rounded">
-                  <MessageSquare className="h-4 w-4 text-primary" />
-                </span>
-              </Button>
-            </div>
+            <PollVote
+              pollId={mockPoll.id}
+              question={mockPoll.question}
+              options={mockPoll.options}
+              onVote={handleVote}
+              hasVoted={hasVoted}
+            />
           </Card>
         </div>
       )
@@ -98,7 +104,6 @@ const UserDashboard = () => {
         <div>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Prayer Requests</h2>
-            <Button variant="link" className="text-primary">Add Request</Button>
           </div>
           <Card className="p-6">
             <div className="space-y-4">
@@ -116,6 +121,7 @@ const UserDashboard = () => {
                   <p className="text-sm text-gray-500">5 people praying</p>
                 </div>
               </div>
+              <AddPrayerRequest />
             </div>
           </Card>
         </div>
