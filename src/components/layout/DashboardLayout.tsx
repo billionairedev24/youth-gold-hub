@@ -9,19 +9,30 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  // Get the initial state from localStorage or default to true
+  const initialSidebarState = localStorage.getItem('sidebarOpen') === 'false' ? false : true;
+  const [isSidebarOpen, setIsSidebarOpen] = useState(initialSidebarState);
   const user = auth.getCurrentUser();
   const isAdmin = user?.role === "admin";
+
+  // Update localStorage when sidebar state changes
+  const handleSidebarToggle = (newState: boolean) => {
+    setIsSidebarOpen(newState);
+    localStorage.setItem('sidebarOpen', String(newState));
+  };
 
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-accent">
         {isAdmin && (
-          <DashboardSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+          <DashboardSidebar 
+            isOpen={isSidebarOpen} 
+            setIsOpen={handleSidebarToggle} 
+          />
         )}
         <div className="flex flex-1 flex-col w-full">
           <DashboardNavbar 
-            onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} 
+            onMenuClick={() => handleSidebarToggle(!isSidebarOpen)} 
             showMenuButton={isAdmin}
           />
           <main className="flex-1 p-6">
