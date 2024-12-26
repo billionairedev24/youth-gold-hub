@@ -13,6 +13,8 @@ interface Widget {
 }
 
 const UserDashboard = () => {
+  const [showEventsTable, setShowEventsTable] = useState(false);
+  
   const upcomingEvents = [
     {
       title: "Youth Bible Study",
@@ -57,7 +59,13 @@ const UserDashboard = () => {
         <div>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Upcoming Events</h2>
-            <Button variant="link" className="text-primary">View All</Button>
+            <Button 
+              variant="link" 
+              className="text-primary"
+              onClick={() => setShowEventsTable(true)}
+            >
+              View All
+            </Button>
           </div>
           <div className="space-y-4">
             {upcomingEvents.map((event) => (
@@ -193,6 +201,11 @@ const UserDashboard = () => {
           </Droppable>
         </DragDropContext>
       </main>
+      
+      <EventsTableDialog 
+        open={showEventsTable} 
+        onOpenChange={setShowEventsTable}
+      />
     </div>
   );
 };

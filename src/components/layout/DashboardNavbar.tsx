@@ -1,9 +1,9 @@
-import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import UserMenu from "./navbar/UserMenu";
 import ProfileDialog from "./navbar/ProfileDialog";
 import SettingsDialog from "./navbar/SettingsDialog";
+import { NotificationsDropdown } from "./navbar/NotificationsDropdown";
 
 interface DashboardNavbarProps {
   onMenuClick?: () => void;
@@ -19,16 +19,13 @@ const DashboardNavbar = ({ onMenuClick, showMenuButton = false }: DashboardNavba
     <nav className="w-full bg-white border-b border-gray-200 shrink-0">
       <div className="h-16 px-4 flex items-center justify-between">
         <div className="flex items-center">
-          <div className="bg-primary rounded-full w-10 h-10 flex items-center justify-center">
+          <div className="bg-primary w-10 h-10 rounded-full flex items-center justify-center overflow-hidden">
             <span className="text-white font-bold text-xl">GYA</span>
           </div>
         </div>
         
         <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="icon" className="hover:bg-accent relative">
-            <Bell className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full border-2 border-white"></span>
-          </Button>
+          <NotificationsDropdown />
           
           <UserMenu
             profileImage={profileImage}
