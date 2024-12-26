@@ -58,7 +58,7 @@ export function EditMemberRoleDialog({
               <SelectTrigger>
                 <SelectValue placeholder="Select a role" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white">
                 {ROLES.map((role) => (
                   <SelectItem key={role} value={role}>
                     {role}
