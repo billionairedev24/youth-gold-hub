@@ -122,7 +122,6 @@ export function PollsTable({ data, onEdit }: PollsTableProps) {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  // Handle delete
                   toast({
                     title: "Poll Deleted",
                     description: "The poll has been deleted successfully.",

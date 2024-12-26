@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { PollsTable } from "@/components/polls/PollsTable";
 import { CreatePollDialog } from "@/components/polls/CreatePollDialog";
+import { EditPollDialog } from "@/components/polls/EditPollDialog";
 import { useState } from "react";
 import { Poll } from "@/types/polls";
+import { useToast } from "@/components/ui/use-toast";
 
 const mockPolls: Poll[] = [
   {
@@ -22,7 +24,19 @@ const mockPolls: Poll[] = [
 
 const PollsPage = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [editingPoll, setEditingPoll] = useState<Poll | null>(null);
   const [polls, setPolls] = useState<Poll[]>(mockPolls);
+  const { toast } = useToast();
+
+  const handleEditPoll = (updatedPoll: Poll) => {
+    setPolls((prev) =>
+      prev.map((poll) => (poll.id === updatedPoll.id ? updatedPoll : poll))
+    );
+    toast({
+      title: "Poll Updated",
+      description: "The poll has been updated successfully.",
+    });
+  };
 
   return (
     <div className="space-y-6 p-6">
@@ -38,7 +52,10 @@ const PollsPage = () => {
           <h2 className="text-xl font-semibold">Manage Polls</h2>
         </CardHeader>
         <CardContent>
-          <PollsTable data={polls} />
+          <PollsTable 
+            data={polls} 
+            onEdit={(poll) => setEditingPoll(poll)}
+          />
         </CardContent>
       </Card>
       <CreatePollDialog 
@@ -47,6 +64,12 @@ const PollsPage = () => {
         onCreatePoll={(poll) => {
           setPolls([poll, ...polls]);
         }}
+      />
+      <EditPollDialog
+        poll={editingPoll}
+        open={!!editingPoll}
+        onOpenChange={(open) => !open && setEditingPoll(null)}
+        onSave={handleEditPoll}
       />
     </div>
   );
