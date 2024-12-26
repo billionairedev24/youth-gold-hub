@@ -23,6 +23,20 @@ let mockUsers = [
     email: 'user@example.com',
     phone: '0987654321',
     role: 'member' as UserRole
+  },
+  {
+    id: '3',
+    name: 'Test Admin',
+    email: 'testadmin@example.com',
+    phone: '111',
+    role: 'admin' as UserRole
+  },
+  {
+    id: '4',
+    name: 'Test User',
+    email: 'testuser@example.com',
+    phone: '222',
+    role: 'member' as UserRole
   }
 ];
 
@@ -32,7 +46,7 @@ export const auth = {
   signIn: async (phone: string): Promise<User> => {
     const user = mockUsers.find(u => u.phone === phone);
     if (!user) {
-      throw new Error('User not found');
+      throw new Error('Invalid phone number. For testing, use: 111 (admin) or 222 (user)');
     }
     currentUser = user;
     return user;

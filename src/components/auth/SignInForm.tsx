@@ -6,11 +6,13 @@ import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
 import { Label } from "@/components/ui/label";
 import { auth } from "@/lib/auth";
 import { Phone } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 const SignInForm = () => {
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,6 +27,11 @@ const SignInForm = () => {
       }
     } catch (error) {
       console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Login Failed",
+        description: error instanceof Error ? error.message : "Failed to sign in. Please try again.",
+      });
     } finally {
       setLoading(false);
     }
@@ -36,6 +43,9 @@ const SignInForm = () => {
         <CardHeader className="space-y-2 text-center">
           <h2 className="text-2xl font-bold">Welcome Back</h2>
           <p className="text-muted-foreground">Sign in to your account</p>
+          <p className="text-sm text-muted-foreground">
+            Test accounts: 111 (admin) or 222 (user)
+          </p>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
