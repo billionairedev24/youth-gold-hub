@@ -64,16 +64,16 @@ export function CreatePollDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-[425px] my-8">
+        <DialogHeader className="mb-4">
           <DialogTitle>Create Poll</DialogTitle>
           <DialogDescription>
             Create a new poll for members to vote on.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-6">
           <ScrollArea className="h-[400px] pr-4">
-            <div className="space-y-4">
+            <div className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="title">Title</Label>
                 <Input
@@ -83,7 +83,7 @@ export function CreatePollDialog({
                   required
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-4">
                 <Label>Options</Label>
                 {options.map((option, index) => (
                   <div key={index} className="flex gap-2">
@@ -143,7 +143,7 @@ export function CreatePollDialog({
               </div>
             </div>
           </ScrollArea>
-          <div className="flex justify-end gap-2 mt-4">
+          <div className="flex justify-end gap-2 pt-4">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
