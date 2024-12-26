@@ -1,5 +1,4 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { 
   Users, 
   Calendar, 
@@ -44,14 +43,9 @@ const stats = [
 const AdminDashboard = () => {
   return (
     <div className="p-6 space-y-6 bg-background min-h-screen">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Dashboard Overview</h1>
-          <p className="text-gray-500">Welcome back, Admin</p>
-        </div>
-        <Button className="bg-primary hover:bg-primary-hover text-white">
-          Generate Report
-        </Button>
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Dashboard Overview</h1>
+        <p className="text-gray-500">Welcome back, Admin</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -86,9 +80,6 @@ const AdminDashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="bg-white">
-          <CardHeader>
-            <h2 className="text-xl font-semibold">Recent Activities</h2>
-          </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {[1, 2, 3].map((item) => (
@@ -102,9 +93,6 @@ const AdminDashboard = () => {
                       <p className="text-sm text-gray-500">2 minutes ago</p>
                     </div>
                   </div>
-                  <Button variant="ghost" className="text-primary hover:text-primary-hover">
-                    View
-                  </Button>
                 </div>
               ))}
             </div>
@@ -112,9 +100,6 @@ const AdminDashboard = () => {
         </Card>
 
         <Card className="bg-white">
-          <CardHeader>
-            <h2 className="text-xl font-semibold">Upcoming Events</h2>
-          </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {[1, 2, 3].map((item) => (
@@ -128,9 +113,6 @@ const AdminDashboard = () => {
                       <p className="text-sm text-gray-500">Tomorrow, 10:00 AM</p>
                     </div>
                   </div>
-                  <Button variant="ghost" className="text-primary hover:text-primary-hover">
-                    Details
-                  </Button>
                 </div>
               ))}
             </div>

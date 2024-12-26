@@ -12,6 +12,8 @@ import UserDashboard from "./pages/UserDashboard";
 import { PrivateRoute } from "./components/auth/PrivateRoute";
 import { Toaster } from "./components/ui/toaster";
 import DashboardLayout from "./components/layout/DashboardLayout";
+import MessagesPage from "./pages/admin/MessagesPage";
+import MembersPage from "./pages/admin/MembersPage";
 
 function App() {
   return (
@@ -76,6 +78,20 @@ function App() {
           <PrivateRoute>
             <DashboardLayout>
               <SettingsPage />
+            </DashboardLayout>
+          </PrivateRoute>
+        } />
+        <Route path="/admin/messages" element={
+          <PrivateRoute>
+            <DashboardLayout>
+              <MessagesPage />
+            </DashboardLayout>
+          </PrivateRoute>
+        } />
+        <Route path="/admin/members" element={
+          <PrivateRoute>
+            <DashboardLayout>
+              <MembersPage />
             </DashboardLayout>
           </PrivateRoute>
         } />
