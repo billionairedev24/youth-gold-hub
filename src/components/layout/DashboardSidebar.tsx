@@ -17,9 +17,11 @@ import {
   Home,
   DollarSign,
   Lightbulb,
+  X,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Button } from "@/components/ui/button";
 
 const menuItems = [
   { title: "Dashboard", icon: Home, url: "/admin" },
@@ -37,22 +39,32 @@ interface DashboardSidebarProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 
-const DashboardSidebar = ({ isOpen }: DashboardSidebarProps) => {
+const DashboardSidebar = ({ isOpen, setIsOpen }: DashboardSidebarProps) => {
   const isMobile = useIsMobile();
 
   return (
     <Sidebar
-      className={`h-screen bg-white border-r border-gray-200 transition-all duration-300 ${
-        isOpen ? (isMobile ? "w-full" : "w-64") : "w-16"
-      }`}
+      className={`
+        fixed top-0 left-0 z-40 h-screen bg-white border-r border-gray-200
+        transition-all duration-300 
+        ${isOpen ? (isMobile ? 'w-full' : 'w-64') : 'w-0 -translate-x-full'}
+      `}
     >
       <SidebarContent>
-        <div className="p-4">
-          <h1 className={`text-primary font-bold transition-all duration-300 ${
-            isOpen ? "text-xl" : "text-sm text-center"
-          }`}>
+        <div className="flex items-center justify-between p-4">
+          <h1 className={`text-primary font-bold text-xl transition-all duration-300`}>
             Youth Admin
           </h1>
+          {isMobile && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsOpen(false)}
+              className="md:hidden"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          )}
         </div>
         <SidebarGroup>
           <SidebarGroupLabel className={!isOpen ? "sr-only" : ""}>
@@ -64,13 +76,11 @@ const DashboardSidebar = ({ isOpen }: DashboardSidebarProps) => {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    className={`flex items-center w-full px-4 py-2 hover:bg-accent rounded-lg transition-colors ${
-                      !isOpen ? "justify-center" : ""
-                    }`}
+                    className="flex items-center w-full px-4 py-2 hover:bg-accent rounded-lg transition-colors"
                   >
-                    <Link to={item.url} className="flex items-center space-x-3">
+                    <Link to={item.url} className="flex items-center space-x-3" onClick={() => isMobile && setIsOpen(false)}>
                       <item.icon className="w-5 h-5 text-primary flex-shrink-0" />
-                      <span className={`${!isOpen ? "hidden" : ""} transition-all duration-300`}>
+                      <span className="transition-all duration-300">
                         {item.title}
                       </span>
                     </Link>

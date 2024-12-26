@@ -3,25 +3,31 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import DashboardSidebar from "./DashboardSidebar";
 import DashboardNavbar from "./DashboardNavbar";
 import { auth } from "@/lib/auth";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
-  // Get the initial state from localStorage or default to true
+  const isMobile = useIsMobile();
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
     const saved = localStorage.getItem('sidebarOpen');
-    return saved !== null ? JSON.parse(saved) : true;
+    return saved !== null ? JSON.parse(saved) : !isMobile;
   });
   
   const user = auth.getCurrentUser();
   const isAdmin = user?.role === "admin";
 
-  // Update localStorage when sidebar state changes
   useEffect(() => {
     localStorage.setItem('sidebarOpen', JSON.stringify(isSidebarOpen));
   }, [isSidebarOpen]);
+
+  useEffect(() => {
+    if (isMobile) {
+      setIsSidebarOpen(false);
+    }
+  }, [isMobile]);
 
   const handleSidebarToggle = () => {
     setIsSidebarOpen(prev => !prev);
@@ -29,20 +35,27 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-full bg-accent">
+      <div className="flex h-screen overflow-hidden bg-accent">
         {isAdmin && (
           <DashboardSidebar 
             isOpen={isSidebarOpen} 
-            setIsOpen={setIsSidebarOpen} 
+            setIsOpen={setIsSidebarOpen}
           />
         )}
-        <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-16'}`}>
+        <div className={`
+          flex-1 flex flex-col 
+          transition-all duration-300
+          ${isSidebarOpen ? (isMobile ? 'ml-0' : 'ml-64') : 'ml-0'}
+          ${isMobile && isSidebarOpen ? 'overflow-hidden' : ''}
+        `}>
           <DashboardNavbar 
             onMenuClick={handleSidebarToggle} 
             showMenuButton={isAdmin}
           />
-          <main className="flex-1 p-6">
-            {children}
+          <main className="flex-1 overflow-auto p-4 md:p-6">
+            <div className="container mx-auto">
+              {children}
+            </div>
           </main>
         </div>
       </div>
