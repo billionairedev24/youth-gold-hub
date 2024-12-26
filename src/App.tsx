@@ -10,20 +10,69 @@ import SuggestionsPage from "./pages/admin/SuggestionsPage";
 import LoginPage from "./pages/LoginPage";
 import { PrivateRoute } from "./components/auth/PrivateRoute";
 import { Toaster } from "./components/ui/toaster";
+import DashboardLayout from "./components/layout/DashboardLayout";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/admin" element={<PrivateRoute><AdminDashboard /></PrivateRoute>} />
-        <Route path="/admin/events" element={<PrivateRoute><EventsPage /></PrivateRoute>} />
-        <Route path="/admin/announcements" element={<PrivateRoute><AnnouncementsPage /></PrivateRoute>} />
-        <Route path="/admin/polls" element={<PrivateRoute><PollsPage /></PrivateRoute>} />
-        <Route path="/admin/budget" element={<PrivateRoute><BudgetPage /></PrivateRoute>} />
-        <Route path="/admin/suggestions" element={<PrivateRoute><SuggestionsPage /></PrivateRoute>} />
-        <Route path="/admin/analytics" element={<PrivateRoute><AnalyticsPage /></PrivateRoute>} />
-        <Route path="/admin/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
+        <Route path="/admin" element={
+          <PrivateRoute>
+            <DashboardLayout>
+              <AdminDashboard />
+            </DashboardLayout>
+          </PrivateRoute>
+        } />
+        <Route path="/admin/events" element={
+          <PrivateRoute>
+            <DashboardLayout>
+              <EventsPage />
+            </DashboardLayout>
+          </PrivateRoute>
+        } />
+        <Route path="/admin/announcements" element={
+          <PrivateRoute>
+            <DashboardLayout>
+              <AnnouncementsPage />
+            </DashboardLayout>
+          </PrivateRoute>
+        } />
+        <Route path="/admin/polls" element={
+          <PrivateRoute>
+            <DashboardLayout>
+              <PollsPage />
+            </DashboardLayout>
+          </PrivateRoute>
+        } />
+        <Route path="/admin/budget" element={
+          <PrivateRoute>
+            <DashboardLayout>
+              <BudgetPage />
+            </DashboardLayout>
+          </PrivateRoute>
+        } />
+        <Route path="/admin/suggestions" element={
+          <PrivateRoute>
+            <DashboardLayout>
+              <SuggestionsPage />
+            </DashboardLayout>
+          </PrivateRoute>
+        } />
+        <Route path="/admin/analytics" element={
+          <PrivateRoute>
+            <DashboardLayout>
+              <AnalyticsPage />
+            </DashboardLayout>
+          </PrivateRoute>
+        } />
+        <Route path="/admin/settings" element={
+          <PrivateRoute>
+            <DashboardLayout>
+              <SettingsPage />
+            </DashboardLayout>
+          </PrivateRoute>
+        } />
         <Route path="*" element={<LoginPage />} />
       </Routes>
       <Toaster />
