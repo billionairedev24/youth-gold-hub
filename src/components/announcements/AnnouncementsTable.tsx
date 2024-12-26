@@ -19,7 +19,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -34,6 +33,7 @@ import { ViewAnnouncementDialog } from "./ViewAnnouncementDialog";
 import { EditAnnouncementDialog } from "./EditAnnouncementDialog";
 import { MoreHorizontal, Eye, Edit } from "lucide-react";
 import { Announcement } from "@/types/announcements";
+import { AnnouncementsTableToolbar } from "./AnnouncementsTableToolbar";
 
 interface AnnouncementsTableProps {
   data: Announcement[];
@@ -134,40 +134,7 @@ export function AnnouncementsTable({ data }: AnnouncementsTableProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-4">
-        <Input
-          placeholder="Filter announcements..."
-          value={(table.getColumn("content")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("content")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline">Columns</Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      <AnnouncementsTableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
