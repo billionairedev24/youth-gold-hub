@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import DashboardSidebar from "./DashboardSidebar";
 import DashboardNavbar from "./DashboardNavbar";
@@ -10,15 +10,21 @@ interface DashboardLayoutProps {
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   // Get the initial state from localStorage or default to true
-  const initialSidebarState = localStorage.getItem('sidebarOpen') === 'false' ? false : true;
-  const [isSidebarOpen, setIsSidebarOpen] = useState(initialSidebarState);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+    const saved = localStorage.getItem('sidebarOpen');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
+  
   const user = auth.getCurrentUser();
   const isAdmin = user?.role === "admin";
 
   // Update localStorage when sidebar state changes
-  const handleSidebarToggle = (newState: boolean) => {
-    setIsSidebarOpen(newState);
-    localStorage.setItem('sidebarOpen', String(newState));
+  useEffect(() => {
+    localStorage.setItem('sidebarOpen', JSON.stringify(isSidebarOpen));
+  }, [isSidebarOpen]);
+
+  const handleSidebarToggle = () => {
+    setIsSidebarOpen(prev => !prev);
   };
 
   return (
@@ -27,12 +33,12 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         {isAdmin && (
           <DashboardSidebar 
             isOpen={isSidebarOpen} 
-            setIsOpen={handleSidebarToggle} 
+            setIsOpen={setIsSidebarOpen} 
           />
         )}
         <div className="flex flex-1 flex-col w-full">
           <DashboardNavbar 
-            onMenuClick={() => handleSidebarToggle(!isSidebarOpen)} 
+            onMenuClick={handleSidebarToggle} 
             showMenuButton={isAdmin}
           />
           <main className="flex-1 p-6">

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { Menu } from "lucide-react";
 import UserMenu from "./navbar/UserMenu";
 import ProfileDialog from "./navbar/ProfileDialog";
 import SettingsDialog from "./navbar/SettingsDialog";
@@ -18,7 +19,17 @@ const DashboardNavbar = ({ onMenuClick, showMenuButton = false }: DashboardNavba
   return (
     <nav className="w-full bg-white border-b border-gray-200 shrink-0">
       <div className="h-16 px-4 flex items-center justify-between">
-        <div className="flex items-center">
+        <div className="flex items-center gap-4">
+          {showMenuButton && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onMenuClick}
+              className="hover:bg-accent"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          )}
           <div className="bg-primary w-10 h-10 rounded-full flex items-center justify-center overflow-hidden">
             <span className="text-white font-bold text-xl">GYA</span>
           </div>
