@@ -29,14 +29,14 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-accent">
+      <div className="flex h-screen w-full bg-accent">
         {isAdmin && (
           <DashboardSidebar 
             isOpen={isSidebarOpen} 
             setIsOpen={setIsSidebarOpen} 
           />
         )}
-        <div className={`flex flex-1 flex-col transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-16'}`}>
+        <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-16'}`}>
           <DashboardNavbar 
             onMenuClick={handleSidebarToggle} 
             showMenuButton={isAdmin}
