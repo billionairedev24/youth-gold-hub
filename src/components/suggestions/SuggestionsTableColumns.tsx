@@ -1,40 +1,17 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { Suggestion } from "@/types/suggestions";
-import { Checkbox } from "@/components/ui/checkbox";
-import { SuggestionActions } from "./SuggestionActions";
+import { Button } from "@/components/ui/button";
+import { Eye, Edit } from "lucide-react";
 
-export const getSuggestionsColumns = (): ColumnDef<Suggestion>[] => [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
+export const getSuggestionsColumns = (
+  onView: (suggestion: Suggestion) => void,
+  onReview: (suggestion: Suggestion) => void
+): ColumnDef<Suggestion>[] => [
   {
     accessorKey: "title",
     header: "Title",
     cell: ({ row }) => <div className="font-medium">{row.getValue("title")}</div>,
-  },
-  {
-    accessorKey: "description",
-    header: "Description",
-    cell: ({ row }) => (
-      <div className="max-w-[400px] truncate">{row.getValue("description")}</div>
-    ),
   },
   {
     accessorKey: "authorName",
@@ -43,7 +20,7 @@ export const getSuggestionsColumns = (): ColumnDef<Suggestion>[] => [
   {
     accessorKey: "createdAt",
     header: "Created At",
-    cell: ({ row }) => format(row.original.createdAt, "PPP"),
+    cell: ({ row }) => format(new Date(row.getValue("createdAt")), "PPp"),
   },
   {
     accessorKey: "status",
@@ -56,6 +33,8 @@ export const getSuggestionsColumns = (): ColumnDef<Suggestion>[] => [
             return "bg-green-100 text-green-800";
           case "rejected":
             return "bg-red-100 text-red-800";
+          case "closed":
+            return "bg-gray-100 text-gray-800";
           default:
             return "bg-yellow-100 text-yellow-800";
         }
@@ -69,13 +48,28 @@ export const getSuggestionsColumns = (): ColumnDef<Suggestion>[] => [
   },
   {
     id: "actions",
+    header: "Actions",
     cell: ({ row }) => (
-      <SuggestionActions 
-        suggestion={row.original} 
-        onAction={(action) => {
-          console.log(`Action ${action} triggered for suggestion ${row.original.id}`);
-        }}
-      />
+      <div className="flex items-center gap-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onView(row.original)}
+          className="flex items-center gap-1 text-muted-foreground hover:text-foreground"
+        >
+          <Eye className="h-4 w-4" />
+          View
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onReview(row.original)}
+          className="flex items-center gap-1 text-muted-foreground hover:text-foreground"
+        >
+          <Edit className="h-4 w-4" />
+          Review
+        </Button>
+      </div>
     ),
   },
 ];

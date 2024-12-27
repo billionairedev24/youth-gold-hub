@@ -22,6 +22,8 @@ import { Suggestion } from "@/types/suggestions";
 import { SuggestionsTablePagination } from "./SuggestionsTablePagination";
 import { getSuggestionsColumns } from "./SuggestionsTableColumns";
 import { SuggestionsTableToolbar } from "./SuggestionsTableToolbar";
+import { ViewSuggestionDialog } from "./ViewSuggestionDialog";
+import { ReviewSuggestionDialog } from "./ReviewSuggestionDialog";
 
 interface SuggestionsTableProps {
   data: Suggestion[];
@@ -33,10 +35,15 @@ export function SuggestionsTable({ data, onSuggestionUpdate }: SuggestionsTableP
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [viewSuggestion, setViewSuggestion] = useState<Suggestion | null>(null);
+  const [reviewSuggestion, setReviewSuggestion] = useState<Suggestion | null>(null);
 
   const table = useReactTable({
     data,
-    columns: getSuggestionsColumns(),
+    columns: getSuggestionsColumns(
+      (suggestion) => setViewSuggestion(suggestion),
+      (suggestion) => setReviewSuggestion(suggestion)
+    ),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -59,18 +66,10 @@ export function SuggestionsTable({ data, onSuggestionUpdate }: SuggestionsTableP
     }
   };
 
-  if (data.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-        <p className="text-lg text-muted-foreground">No suggestions found</p>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-4">
       <SuggestionsTableToolbar table={table} />
-      <div className="rounded-md">
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -89,22 +88,53 @@ export function SuggestionsTable({ data, onSuggestionUpdate }: SuggestionsTableP
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+            {table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={table.getAllColumns().length}
+                  className="h-24 text-center"
+                >
+                  No suggestions found.
+                </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </div>
       <SuggestionsTablePagination table={table} />
+
+      {viewSuggestion && (
+        <ViewSuggestionDialog
+          suggestion={viewSuggestion}
+          open={!!viewSuggestion}
+          onOpenChange={(open) => !open && setViewSuggestion(null)}
+        />
+      )}
+
+      {reviewSuggestion && (
+        <ReviewSuggestionDialog
+          suggestion={reviewSuggestion}
+          open={!!reviewSuggestion}
+          onOpenChange={(open) => !open && setReviewSuggestion(null)}
+          onSuggestionUpdate={handleSuggestionUpdate}
+        />
+      )}
     </div>
   );
 }
