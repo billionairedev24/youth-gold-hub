@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { MessageSquare } from "lucide-react";
 
 interface SuggestionCommentsDialogProps {
   suggestion: Suggestion;
@@ -56,33 +57,46 @@ export function SuggestionCommentsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[600px] w-[95vw] h-[90vh] p-0 gap-0">
         <DialogHeader className="p-6 pb-2">
-          <DialogTitle className="text-xl">{suggestion.title}</DialogTitle>
+          <DialogTitle className="text-xl font-semibold">{suggestion.title}</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col h-full overflow-hidden p-6 pt-2">
-          <div className="space-y-2 mb-4">
-            <p className="text-sm font-medium">Description</p>
-            <p className="text-sm text-muted-foreground">{suggestion.description}</p>
+          <div className="space-y-2 mb-4 bg-muted/50 p-4 rounded-lg">
+            <p className="text-sm font-medium text-muted-foreground">Description</p>
+            <p className="text-sm">{suggestion.description}</p>
           </div>
-          <div className="flex-1 min-h-0 space-y-2">
+          <div className="flex-1 min-h-0 space-y-4">
             <div className="flex items-center justify-between">
-              <h4 className="text-sm font-medium">Comments</h4>
-              <span className="text-xs text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                <h4 className="text-sm font-medium">Comments</h4>
+              </div>
+              <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
                 {comments.length} comments
               </span>
             </div>
-            <ScrollArea className="h-[calc(100%-180px)] rounded-md border p-4">
-              <div className="space-y-4">
+            <ScrollArea className="flex-1 h-[calc(100%-180px)] rounded-lg border bg-card">
+              <div className="p-4 space-y-6">
                 {comments.map((comment) => (
-                  <div key={comment.id} className="space-y-1 pb-3 border-b last:border-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium">{comment.authorName}</span>
+                  <div
+                    key={comment.id}
+                    className="space-y-2 pb-4 border-b last:border-0 last:pb-0"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium bg-primary/10 text-primary px-2 py-1 rounded-full">
+                        {comment.authorName}
+                      </span>
                       <span className="text-xs text-muted-foreground">
-                        {format(comment.createdAt, "PPp")}
+                        {format(new Date(comment.createdAt), "PPp")}
                       </span>
                     </div>
-                    <p className="text-sm">{comment.content}</p>
+                    <p className="text-sm leading-relaxed">{comment.content}</p>
                   </div>
                 ))}
+                {comments.length === 0 && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <p>No comments yet. Be the first to comment!</p>
+                  </div>
+                )}
               </div>
             </ScrollArea>
           </div>
