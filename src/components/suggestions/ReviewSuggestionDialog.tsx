@@ -85,11 +85,11 @@ export function ReviewSuggestionDialog({
     }
   };
 
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[600px] w-[95vw] max-h-[85vh]">
-        <div className="flex flex-col h-full max-h-full">
-          <div className="flex-none pb-4">
+  if (suggestion.status === 'closed') {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-[600px] w-[95vw]">
+          <div className="space-y-4">
             <DialogHeader
               title={suggestion.title}
               description={suggestion.description}
@@ -98,22 +98,40 @@ export function ReviewSuggestionDialog({
               createdAt={suggestion.createdAt}
               getStatusColor={getStatusColor}
             />
+            <div className="text-center text-muted-foreground py-4">
+              This suggestion is closed and cannot be reviewed.
+            </div>
           </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
-          <div className="flex-1 overflow-hidden">
-            <ScrollArea className="h-[calc(85vh-200px)]">
-              <div className="px-6 space-y-6">
-                <CommentSection
-                  comments={suggestion.comments}
-                  newComment={newComment}
-                  setNewComment={setNewComment}
-                  onAddComment={handleAddComment}
-                />
-              </div>
-            </ScrollArea>
-          </div>
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-[600px] w-[95vw]">
+        <div className="flex flex-col space-y-4">
+          <DialogHeader
+            title={suggestion.title}
+            description={suggestion.description}
+            status={suggestion.status}
+            authorName={suggestion.authorName}
+            createdAt={suggestion.createdAt}
+            getStatusColor={getStatusColor}
+          />
 
-          <div className="flex-none pt-4 px-6 mt-4 border-t">
+          <ScrollArea className="flex-1 h-[50vh]">
+            <div className="space-y-6 pr-4">
+              <CommentSection
+                comments={suggestion.comments}
+                newComment={newComment}
+                setNewComment={setNewComment}
+                onAddComment={handleAddComment}
+              />
+            </div>
+          </ScrollArea>
+
+          <div className="pt-4 border-t">
             <ActionButtons
               status={suggestion.status}
               onAction={handleSuggestionAction}
