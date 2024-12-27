@@ -6,15 +6,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Edit, Lock, Unlock, MoreHorizontal } from "lucide-react";
+import { BarChart2, Edit, Lock, Unlock, MoreHorizontal } from "lucide-react";
 
 interface PollActionsProps {
   poll: Poll;
   onEdit?: (poll: Poll) => void;
   onToggleStatus?: (poll: Poll) => void;
+  onViewStatistics?: (poll: Poll) => void;
 }
 
-export function PollActions({ poll, onEdit, onToggleStatus }: PollActionsProps) {
+export function PollActions({ 
+  poll, 
+  onEdit, 
+  onToggleStatus,
+  onViewStatistics 
+}: PollActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -23,6 +29,10 @@ export function PollActions({ poll, onEdit, onToggleStatus }: PollActionsProps) 
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => onViewStatistics?.(poll)}>
+          <BarChart2 className="mr-2 h-4 w-4" />
+          View Statistics
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onEdit?.(poll)}>
           <Edit className="mr-2 h-4 w-4" />
           Edit

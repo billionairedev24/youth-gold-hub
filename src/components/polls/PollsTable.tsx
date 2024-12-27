@@ -10,7 +10,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { useState } from "react"; // Added this import
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -28,6 +28,7 @@ import { PollsTablePagination } from "./PollsTablePagination";
 import { Poll } from "@/types/polls";
 import { PollStatistics } from "./PollStatistics";
 import { PollActions } from "./PollActions";
+import { ViewStatisticsDialog } from "./ViewStatisticsDialog";
 
 interface PollsTableProps {
   data: Poll[];
@@ -40,6 +41,7 @@ export function PollsTable({ data, onEdit, onToggleStatus }: PollsTableProps) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [selectedPoll, setSelectedPoll] = useState<Poll | null>(null);
   const { toast } = useToast();
 
   const columns: ColumnDef<Poll>[] = [
@@ -68,11 +70,6 @@ export function PollsTable({ data, onEdit, onToggleStatus }: PollsTableProps) {
       cell: ({ row }) => <div className="font-medium">{row.getValue("title")}</div>,
     },
     {
-      accessorKey: "statistics",
-      header: "Statistics",
-      cell: ({ row }) => <PollStatistics poll={row.original} />,
-    },
-    {
       accessorKey: "startDate",
       header: "Start Date",
       cell: ({ row }) => format(row.original.startDate, "PPP"),
@@ -98,6 +95,7 @@ export function PollsTable({ data, onEdit, onToggleStatus }: PollsTableProps) {
           poll={row.original}
           onEdit={onEdit}
           onToggleStatus={onToggleStatus}
+          onViewStatistics={() => setSelectedPoll(row.original)}
         />
       ),
     },
@@ -170,6 +168,14 @@ export function PollsTable({ data, onEdit, onToggleStatus }: PollsTableProps) {
         </Table>
       </div>
       <PollsTablePagination table={table} />
+      
+      {selectedPoll && (
+        <ViewStatisticsDialog
+          poll={selectedPoll}
+          open={!!selectedPoll}
+          onOpenChange={(open) => !open && setSelectedPoll(null)}
+        />
+      )}
     </div>
   );
 }
