@@ -30,7 +30,7 @@ import { Poll } from "@/types/polls";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { Edit, Lock, Unlock, MoreHorizontal } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { PollsTableToolbar } from "./PollsTableToolbar";
 import { PollsTablePagination } from "./PollsTablePagination";
@@ -38,14 +38,19 @@ import { PollsTablePagination } from "./PollsTablePagination";
 interface PollsTableProps {
   data: Poll[];
   onEdit?: (poll: Poll) => void;
+  onToggleStatus?: (poll: Poll) => void;
 }
 
-export function PollsTable({ data, onEdit }: PollsTableProps) {
+export function PollsTable({ data, onEdit, onToggleStatus }: PollsTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const { toast } = useToast();
+
+  const getTotalVotes = (poll: Poll) => {
+    return poll.options.reduce((sum, option) => sum + option.votes, 0);
+  };
 
   const columns: ColumnDef<Poll>[] = [
     {
@@ -74,7 +79,7 @@ export function PollsTable({ data, onEdit }: PollsTableProps) {
     },
     {
       accessorKey: "options",
-      header: "Options",
+      header: "Options & Votes",
       cell: ({ row }) => (
         <ul className="list-disc list-inside">
           {row.original.options.map((option) => (
@@ -82,6 +87,9 @@ export function PollsTable({ data, onEdit }: PollsTableProps) {
               {option.text} ({option.votes} votes)
             </li>
           ))}
+          <li className="font-semibold mt-2">
+            Total Votes: {getTotalVotes(row.original)}
+          </li>
         </ul>
       ),
     },
@@ -100,7 +108,7 @@ export function PollsTable({ data, onEdit }: PollsTableProps) {
       header: "Status",
       cell: ({ row }) => (
         <Badge variant={row.original.isActive ? "default" : "secondary"}>
-          {row.original.isActive ? "Active" : "Ended"}
+          {row.original.isActive ? "Active" : "Closed"}
         </Badge>
       ),
     },
@@ -122,16 +130,19 @@ export function PollsTable({ data, onEdit }: PollsTableProps) {
                 Edit
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => {
-                  toast({
-                    title: "Poll Deleted",
-                    description: "The poll has been deleted successfully.",
-                  });
-                }}
-                className="text-red-600"
+                onClick={() => onToggleStatus?.(poll)}
               >
-                <Trash className="mr-2 h-4 w-4" />
-                Delete
+                {poll.isActive ? (
+                  <>
+                    <Lock className="mr-2 h-4 w-4" />
+                    Close Poll
+                  </>
+                ) : (
+                  <>
+                    <Unlock className="mr-2 h-4 w-4" />
+                    Reopen Poll
+                  </>
+                )}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

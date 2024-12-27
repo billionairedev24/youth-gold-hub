@@ -38,6 +38,17 @@ const PollsPage = () => {
     });
   };
 
+  const handleToggleStatus = (poll: Poll) => {
+    const updatedPoll = { ...poll, isActive: !poll.isActive };
+    setPolls((prev) =>
+      prev.map((p) => (p.id === poll.id ? updatedPoll : p))
+    );
+    toast({
+      title: poll.isActive ? "Poll Closed" : "Poll Reopened",
+      description: `The poll has been ${poll.isActive ? "closed" : "reopened"} successfully.`,
+    });
+  };
+
   return (
     <div className="space-y-6 p-6">
       <div className="flex justify-between items-center">
@@ -55,6 +66,7 @@ const PollsPage = () => {
           <PollsTable 
             data={polls} 
             onEdit={(poll) => setEditingPoll(poll)}
+            onToggleStatus={handleToggleStatus}
           />
         </CardContent>
       </Card>
