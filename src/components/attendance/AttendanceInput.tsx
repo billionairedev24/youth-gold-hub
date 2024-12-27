@@ -12,7 +12,8 @@ interface AttendanceInputProps {
 
 export const AttendanceInput = ({ open, onOpenChange }: AttendanceInputProps) => {
   const { toast } = useToast();
-  const [attendance, setAttendance] = useState("");
+  const [menCount, setMenCount] = useState("");
+  const [womenCount, setWomenCount] = useState("");
   const [date, setDate] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -26,10 +27,14 @@ export const AttendanceInput = ({ open, onOpenChange }: AttendanceInputProps) =>
     const existingData = JSON.parse(localStorage.getItem('attendanceData') || '[]');
     const newData = [...existingData];
     
+    const totalAttendance = parseInt(menCount) + parseInt(womenCount);
+    
     // Update attendance for the selected month
     const monthEntry = newData.find(entry => entry.month === monthNames[monthIndex]);
     if (monthEntry) {
-      monthEntry.attendance = parseInt(attendance);
+      monthEntry.attendance = totalAttendance;
+      monthEntry.men = parseInt(menCount);
+      monthEntry.women = parseInt(womenCount);
       
       // Recalculate running average
       let sum = 0;
@@ -54,10 +59,11 @@ export const AttendanceInput = ({ open, onOpenChange }: AttendanceInputProps) =>
 
     toast({
       title: "Attendance Recorded",
-      description: `Recorded ${attendance} attendees for ${monthNames[monthIndex]}`,
+      description: `Recorded ${totalAttendance} attendees (${menCount} men, ${womenCount} women) for ${monthNames[monthIndex]}`,
     });
     
-    setAttendance("");
+    setMenCount("");
+    setWomenCount("");
     setDate("");
     onOpenChange(false);
   };
@@ -68,7 +74,7 @@ export const AttendanceInput = ({ open, onOpenChange }: AttendanceInputProps) =>
         <DialogHeader>
           <DialogTitle>Record Attendance</DialogTitle>
           <DialogDescription>
-            Add monthly attendance records to track young adult participation.
+            Add monthly attendance records with gender breakdown.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -83,13 +89,24 @@ export const AttendanceInput = ({ open, onOpenChange }: AttendanceInputProps) =>
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="attendance">Number of Attendees</Label>
+            <Label htmlFor="menCount">Number of Men</Label>
             <Input
-              id="attendance"
+              id="menCount"
               type="number"
               min="0"
-              value={attendance}
-              onChange={(e) => setAttendance(e.target.value)}
+              value={menCount}
+              onChange={(e) => setMenCount(e.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="womenCount">Number of Women</Label>
+            <Input
+              id="womenCount"
+              type="number"
+              min="0"
+              value={womenCount}
+              onChange={(e) => setWomenCount(e.target.value)}
               required
             />
           </div>
