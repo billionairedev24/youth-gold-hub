@@ -88,7 +88,7 @@ export function ReviewSuggestionDialog({
   if (suggestion.status === 'closed') {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-[600px] w-[95vw]">
+        <DialogContent className="max-w-[600px] w-[95vw] my-8">
           <div className="space-y-4">
             <DialogHeader
               title={suggestion.title}
@@ -109,8 +109,8 @@ export function ReviewSuggestionDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[600px] w-[95vw]">
-        <div className="flex flex-col space-y-4">
+      <DialogContent className="max-w-[600px] w-[95vw] my-8">
+        <div className="flex flex-col space-y-4 max-h-[calc(100vh-120px)]">
           <DialogHeader
             title={suggestion.title}
             description={suggestion.description}
@@ -120,7 +120,7 @@ export function ReviewSuggestionDialog({
             getStatusColor={getStatusColor}
           />
 
-          <ScrollArea className="flex-1 h-[50vh]">
+          <ScrollArea className="flex-1 h-[calc(100vh-300px)]">
             <div className="space-y-6 pr-4">
               <CommentSection
                 comments={suggestion.comments}
@@ -131,7 +131,7 @@ export function ReviewSuggestionDialog({
             </div>
           </ScrollArea>
 
-          <div className="pt-4 border-t">
+          <div className="pt-4 mt-2 border-t bg-background">
             <ActionButtons
               status={suggestion.status}
               onAction={handleSuggestionAction}
