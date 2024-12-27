@@ -40,14 +40,23 @@ export function SuggestionsTable({ data: initialData, onSuggestionUpdate }: Sugg
   const [reviewSuggestion, setReviewSuggestion] = useState<Suggestion | null>(null);
 
   const handleSuggestionUpdate = (updatedSuggestion: Suggestion) => {
-    setData(prevData =>
-      prevData.map(suggestion =>
-        suggestion.id === updatedSuggestion.id ? updatedSuggestion : suggestion
-      )
+    const newData = data.map(suggestion =>
+      suggestion.id === updatedSuggestion.id ? updatedSuggestion : suggestion
     );
+    setData(newData);
     
     if (onSuggestionUpdate) {
       onSuggestionUpdate(updatedSuggestion);
+    }
+
+    // Update the viewSuggestion state if the updated suggestion is currently being viewed
+    if (viewSuggestion?.id === updatedSuggestion.id) {
+      setViewSuggestion(updatedSuggestion);
+    }
+
+    // Update the reviewSuggestion state if the updated suggestion is currently being reviewed
+    if (reviewSuggestion?.id === updatedSuggestion.id) {
+      setReviewSuggestion(updatedSuggestion);
     }
   };
 
@@ -125,7 +134,7 @@ export function SuggestionsTable({ data: initialData, onSuggestionUpdate }: Sugg
         </Table>
       </div>
       <SuggestionsTablePagination table={table} />
-
+      
       {viewSuggestion && (
         <ViewSuggestionDialog
           suggestion={viewSuggestion}
