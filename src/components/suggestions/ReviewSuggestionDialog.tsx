@@ -87,34 +87,38 @@ export function ReviewSuggestionDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[600px] w-[95vw] max-h-[85vh] flex flex-col">
-        <div className="flex-none">
-          <DialogHeader
-            title={suggestion.title}
-            description={suggestion.description}
-            status={suggestion.status}
-            authorName={suggestion.authorName}
-            createdAt={suggestion.createdAt}
-            getStatusColor={getStatusColor}
-          />
-        </div>
-
-        <ScrollArea className="flex-1 px-6 min-h-0">
-          <div className="space-y-6 py-4">
-            <CommentSection
-              comments={suggestion.comments}
-              newComment={newComment}
-              setNewComment={setNewComment}
-              onAddComment={handleAddComment}
+      <DialogContent className="max-w-[600px] w-[95vw] max-h-[85vh]">
+        <div className="flex flex-col h-full max-h-full">
+          <div className="flex-none pb-4">
+            <DialogHeader
+              title={suggestion.title}
+              description={suggestion.description}
+              status={suggestion.status}
+              authorName={suggestion.authorName}
+              createdAt={suggestion.createdAt}
+              getStatusColor={getStatusColor}
             />
           </div>
-        </ScrollArea>
 
-        <div className="flex-none px-6 pt-4 border-t">
-          <ActionButtons
-            status={suggestion.status}
-            onAction={handleSuggestionAction}
-          />
+          <div className="flex-1 overflow-hidden">
+            <ScrollArea className="h-[calc(85vh-200px)]">
+              <div className="px-6 space-y-6">
+                <CommentSection
+                  comments={suggestion.comments}
+                  newComment={newComment}
+                  setNewComment={setNewComment}
+                  onAddComment={handleAddComment}
+                />
+              </div>
+            </ScrollArea>
+          </div>
+
+          <div className="flex-none pt-4 px-6 mt-4 border-t">
+            <ActionButtons
+              status={suggestion.status}
+              onAction={handleSuggestionAction}
+            />
+          </div>
         </div>
       </DialogContent>
     </Dialog>
