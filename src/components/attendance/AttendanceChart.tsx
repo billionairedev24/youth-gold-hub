@@ -1,14 +1,12 @@
 import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
-  Line,
-  ComposedChart
+  Legend
 } from 'recharts';
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
@@ -74,29 +72,10 @@ export const AttendanceChart = () => {
       return (
         <div className="bg-white p-4 rounded-lg shadow-lg border">
           <p className="font-semibold">{label}</p>
-          <div className="grid grid-cols-2 gap-4 mt-2">
-            <div>
-              <p className="text-blue-600 font-medium">Men</p>
-              <p className="text-2xl font-bold">{payload[0].payload.men}</p>
-            </div>
-            <div>
-              <p className="text-pink-600 font-medium">Women</p>
-              <p className="text-2xl font-bold">{payload[0].payload.women}</p>
-            </div>
-          </div>
-          <div className="mt-4 pt-4 border-t">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Total</span>
-              <span className="text-xl font-bold text-primary">
-                {payload[0].payload.attendance}
-              </span>
-            </div>
-            <div className="flex justify-between items-center mt-2">
-              <span className="text-gray-600">Average</span>
-              <span className="text-xl font-bold text-emerald-600">
-                {payload[0].payload.average}
-              </span>
-            </div>
+          <div className="mt-2">
+            <p className="text-blue-600">Men: {payload[0].payload.men}</p>
+            <p className="text-pink-600">Women: {payload[0].payload.women}</p>
+            <p className="text-primary mt-2">Total: {payload[0].payload.attendance}</p>
           </div>
         </div>
       );
@@ -139,7 +118,7 @@ export const AttendanceChart = () => {
         <CardContent className="pt-6">
           <div className="h-[400px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart
+              <LineChart
                 data={attendanceData}
                 margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
               >
@@ -164,21 +143,23 @@ export const AttendanceChart = () => {
                   height={36}
                   iconType="circle"
                 />
-                <Bar 
+                <Line 
+                  type="monotone"
                   dataKey="men"
                   name="Men"
-                  fill="#3b82f6"
-                  radius={[4, 4, 0, 0]}
-                  stackId="a"
+                  stroke="#3b82f6"
+                  strokeWidth={2}
+                  dot={{ fill: '#3b82f6' }}
                 />
-                <Bar 
+                <Line 
+                  type="monotone"
                   dataKey="women"
                   name="Women"
-                  fill="#ec4899"
-                  radius={[4, 4, 0, 0]}
-                  stackId="a"
+                  stroke="#ec4899"
+                  strokeWidth={2}
+                  dot={{ fill: '#ec4899' }}
                 />
-              </BarChart>
+              </LineChart>
             </ResponsiveContainer>
           </div>
         </CardContent>
