@@ -24,6 +24,7 @@ export function SuggestionCommentsDialog({
   onOpenChange,
 }: SuggestionCommentsDialogProps) {
   const [newComment, setNewComment] = useState("");
+  const [comments, setComments] = useState(suggestion.comments);
   const { toast } = useToast();
 
   const handleAddComment = () => {
@@ -36,6 +37,14 @@ export function SuggestionCommentsDialog({
       return;
     }
 
+    const newCommentObj = {
+      id: `${Date.now()}`,
+      content: newComment,
+      createdAt: new Date(),
+      authorName: "You", // In a real app, this would come from the authenticated user
+    };
+
+    setComments([...comments, newCommentObj]);
     toast({
       title: "Success",
       description: "Comment added successfully",
@@ -58,12 +67,12 @@ export function SuggestionCommentsDialog({
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-medium">Comments</h4>
               <span className="text-xs text-muted-foreground">
-                {suggestion.comments.length} comments
+                {comments.length} comments
               </span>
             </div>
             <ScrollArea className="h-[calc(100%-180px)] rounded-md border p-4">
               <div className="space-y-4">
-                {suggestion.comments.map((comment) => (
+                {comments.map((comment) => (
                   <div key={comment.id} className="space-y-1 pb-3 border-b last:border-0">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium">{comment.authorName}</span>
