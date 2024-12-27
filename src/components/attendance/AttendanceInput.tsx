@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,11 +18,43 @@ export const AttendanceInput = ({ open, onOpenChange }: AttendanceInputProps) =>
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Here you would typically save the attendance data
-    // For now, we'll just show a success message
+    const selectedDate = new Date(date);
+    const monthIndex = selectedDate.getMonth();
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    
+    // Get existing data or initialize with default
+    const existingData = JSON.parse(localStorage.getItem('attendanceData') || '[]');
+    const newData = [...existingData];
+    
+    // Update attendance for the selected month
+    const monthEntry = newData.find(entry => entry.month === monthNames[monthIndex]);
+    if (monthEntry) {
+      monthEntry.attendance = parseInt(attendance);
+      
+      // Recalculate running average
+      let sum = 0;
+      let count = 0;
+      newData.forEach((entry, idx) => {
+        if (entry.attendance > 0) {
+          sum += entry.attendance;
+          count++;
+          entry.average = Math.round(sum / count);
+        }
+      });
+    }
+    
+    // Save updated data
+    localStorage.setItem('attendanceData', JSON.stringify(newData));
+    
+    // Trigger storage event for chart update
+    window.dispatchEvent(new StorageEvent('storage', {
+      key: 'attendanceData',
+      newValue: JSON.stringify(newData)
+    }));
+
     toast({
       title: "Attendance Recorded",
-      description: `Recorded ${attendance} attendees for ${date}`,
+      description: `Recorded ${attendance} attendees for ${monthNames[monthIndex]}`,
     });
     
     setAttendance("");
@@ -35,6 +67,9 @@ export const AttendanceInput = ({ open, onOpenChange }: AttendanceInputProps) =>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Record Attendance</DialogTitle>
+          <DialogDescription>
+            Add monthly attendance records to track young adult participation.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
