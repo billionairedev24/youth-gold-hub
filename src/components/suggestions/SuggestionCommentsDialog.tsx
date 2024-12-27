@@ -36,7 +36,6 @@ export function SuggestionCommentsDialog({
       return;
     }
 
-    // Add your comment submission logic here
     toast({
       title: "Success",
       description: "Comment added successfully",
@@ -46,26 +45,26 @@ export function SuggestionCommentsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[600px] w-[95vw] max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
-          <DialogTitle>{suggestion.title}</DialogTitle>
+          <DialogTitle className="text-xl">{suggestion.title}</DialogTitle>
         </DialogHeader>
-        <div className="space-y-6 py-4">
+        <div className="flex-1 min-h-0 space-y-4 py-4">
           <div className="space-y-2">
             <p className="text-sm font-medium">Description</p>
             <p className="text-sm text-muted-foreground">{suggestion.description}</p>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-4 flex-1 min-h-0">
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-medium">Comments</h4>
               <span className="text-xs text-muted-foreground">
                 {suggestion.comments.length} comments
               </span>
             </div>
-            <ScrollArea className="h-[200px] rounded-md border p-4">
+            <ScrollArea className="flex-1 h-[40vh] rounded-md border p-4">
               <div className="space-y-4">
                 {suggestion.comments.map((comment) => (
-                  <div key={comment.id} className="space-y-1">
+                  <div key={comment.id} className="space-y-1 pb-3 border-b last:border-0">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium">{comment.authorName}</span>
                       <span className="text-xs text-muted-foreground">
@@ -78,11 +77,12 @@ export function SuggestionCommentsDialog({
               </div>
             </ScrollArea>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2 pt-2">
             <Textarea
               placeholder="Add a comment..."
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
+              className="min-h-[100px]"
             />
             <Button onClick={handleAddComment} className="w-full">
               Add Comment
