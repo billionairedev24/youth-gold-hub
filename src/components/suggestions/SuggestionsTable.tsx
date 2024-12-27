@@ -25,9 +25,10 @@ import { SuggestionsTableToolbar } from "./SuggestionsTableToolbar";
 
 interface SuggestionsTableProps {
   data: Suggestion[];
+  onSuggestionUpdate?: (updatedSuggestion: Suggestion) => void;
 }
 
-export function SuggestionsTable({ data }: SuggestionsTableProps) {
+export function SuggestionsTable({ data, onSuggestionUpdate }: SuggestionsTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -51,6 +52,12 @@ export function SuggestionsTable({ data }: SuggestionsTableProps) {
       rowSelection,
     },
   });
+
+  const handleSuggestionUpdate = (updatedSuggestion: Suggestion) => {
+    if (onSuggestionUpdate) {
+      onSuggestionUpdate(updatedSuggestion);
+    }
+  };
 
   if (data.length === 0) {
     return (

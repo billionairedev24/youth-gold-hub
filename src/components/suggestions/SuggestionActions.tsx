@@ -1,31 +1,41 @@
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Eye } from "lucide-react";
+import { Check, X, Lock } from "lucide-react";
 import { Suggestion } from "@/types/suggestions";
-import { SuggestionCommentsDialog } from "./SuggestionCommentsDialog";
-import { useState } from "react";
 
 interface SuggestionActionsProps {
   suggestion: Suggestion;
+  onAction: (action: 'approved' | 'rejected' | 'closed') => void;
 }
 
-export function SuggestionActions({ suggestion }: SuggestionActionsProps) {
-  const [showComments, setShowComments] = useState(false);
+export function SuggestionActions({ suggestion, onAction }: SuggestionActionsProps) {
+  if (suggestion.status !== 'pending') return null;
 
   return (
     <div className="flex items-center gap-2">
       <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => setShowComments(true)}
-        title="View Comments"
+        variant="outline"
+        className="text-green-600 hover:text-green-700 hover:bg-green-50"
+        onClick={() => onAction('approved')}
       >
-        <MessageSquare className="h-4 w-4" />
+        <Check className="h-4 w-4 mr-2" />
+        Approve
       </Button>
-      <SuggestionCommentsDialog
-        suggestion={suggestion}
-        open={showComments}
-        onOpenChange={setShowComments}
-      />
+      <Button
+        variant="outline"
+        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+        onClick={() => onAction('rejected')}
+      >
+        <X className="h-4 w-4 mr-2" />
+        Reject
+      </Button>
+      <Button
+        variant="outline"
+        className="text-gray-600 hover:text-gray-700 hover:bg-gray-50"
+        onClick={() => onAction('closed')}
+      >
+        <Lock className="h-4 w-4 mr-2" />
+        Close
+      </Button>
     </div>
   );
 }

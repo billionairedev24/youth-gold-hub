@@ -6,28 +6,30 @@ import {
 } from "@/components/ui/dialog";
 import { Suggestion } from "@/types/suggestions";
 import { format } from "date-fns";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { MessageSquare, Check, X, Lock, User } from "lucide-react";
+import { User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { CommentsList } from "./CommentsList";
+import { SuggestionActions } from "./SuggestionActions";
 
 interface SuggestionCommentsDialogProps {
   suggestion: Suggestion;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onSuggestionUpdate: (updatedSuggestion: Suggestion) => void;
 }
 
 export function SuggestionCommentsDialog({
   suggestion,
   open,
   onOpenChange,
+  onSuggestionUpdate,
 }: SuggestionCommentsDialogProps) {
   const [newComment, setNewComment] = useState("");
-  const [currentSuggestion, setCurrentSuggestion] = useState(suggestion);
   const { toast } = useToast();
 
   const handleAddComment = () => {
@@ -48,24 +50,28 @@ export function SuggestionCommentsDialog({
       authorRole: "admin" as const,
     };
 
-    setCurrentSuggestion(prev => ({
-      ...prev,
-      comments: [...prev.comments, newCommentObj]
-    }));
+    const updatedSuggestion = {
+      ...suggestion,
+      comments: [...suggestion.comments, newCommentObj]
+    };
 
+    onSuggestionUpdate(updatedSuggestion);
+    setNewComment("");
+    
     toast({
       title: "Success",
       description: "Comment added successfully",
     });
-    setNewComment("");
   };
 
   const handleSuggestionAction = (action: 'approved' | 'rejected' | 'closed') => {
-    setCurrentSuggestion(prev => ({
-      ...prev,
+    const updatedSuggestion = {
+      ...suggestion,
       status: action
-    }));
+    };
 
+    onSuggestionUpdate(updatedSuggestion);
+    
     toast({
       title: "Success",
       description: `Suggestion ${action} successfully`,
@@ -92,101 +98,37 @@ export function SuggestionCommentsDialog({
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-1">
               <DialogTitle className="text-xl font-semibold">
-                {currentSuggestion.title}
+                {suggestion.title}
               </DialogTitle>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <User className="h-4 w-4" />
-                <span>{currentSuggestion.authorName}</span>
+                <span>{suggestion.authorName}</span>
                 <span>•</span>
-                <span>{format(new Date(currentSuggestion.createdAt), "PPp")}</span>
+                <span>{format(new Date(suggestion.createdAt), "PPp")}</span>
               </div>
             </div>
             <Badge 
               variant="outline" 
-              className={getStatusColor(currentSuggestion.status)}
+              className={getStatusColor(suggestion.status)}
             >
-              {currentSuggestion.status.charAt(0).toUpperCase() + currentSuggestion.status.slice(1)}
+              {suggestion.status.charAt(0).toUpperCase() + suggestion.status.slice(1)}
             </Badge>
           </div>
         </DialogHeader>
 
         <div className="p-6 space-y-6">
           <div className="bg-muted/50 p-4 rounded-lg border">
-            <p className="text-sm whitespace-pre-wrap">{currentSuggestion.description}</p>
+            <p className="text-sm whitespace-pre-wrap">{suggestion.description}</p>
           </div>
 
-          {currentSuggestion.status === 'pending' && (
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                className="text-green-600 hover:text-green-700 hover:bg-green-50"
-                onClick={() => handleSuggestionAction('approved')}
-              >
-                <Check className="h-4 w-4 mr-2" />
-                Approve
-              </Button>
-              <Button
-                variant="outline"
-                className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                onClick={() => handleSuggestionAction('rejected')}
-              >
-                <X className="h-4 w-4 mr-2" />
-                Reject
-              </Button>
-              <Button
-                variant="outline"
-                className="text-gray-600 hover:text-gray-700 hover:bg-gray-50"
-                onClick={() => handleSuggestionAction('closed')}
-              >
-                <Lock className="h-4 w-4 mr-2" />
-                Close
-              </Button>
-            </div>
-          )}
+          <SuggestionActions 
+            suggestion={suggestion}
+            onAction={handleSuggestionAction}
+          />
 
           <Separator />
 
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-sm font-medium">
-              <MessageSquare className="h-4 w-4" />
-              Comments ({currentSuggestion.comments.length})
-            </div>
-            <ScrollArea className="h-[300px] pr-4">
-              <div className="space-y-4">
-                {currentSuggestion.comments.map((comment) => (
-                  <div
-                    key={comment.id}
-                    className="p-4 rounded-lg border bg-card hover:bg-accent/10 transition-colors"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium">
-                          {comment.authorName}
-                        </span>
-                        {comment.authorRole === 'admin' && (
-                          <Badge variant="secondary" className="text-xs">
-                            Admin
-                          </Badge>
-                        )}
-                      </div>
-                      <span className="text-xs text-muted-foreground">
-                        {format(new Date(comment.createdAt), "PPp")}
-                      </span>
-                    </div>
-                    <p className="text-sm whitespace-pre-wrap">
-                      {comment.content}
-                    </p>
-                  </div>
-                ))}
-                {currentSuggestion.comments.length === 0 && (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <MessageSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                    <p>No comments yet</p>
-                  </div>
-                )}
-              </div>
-            </ScrollArea>
-          </div>
+          <CommentsList comments={suggestion.comments} />
 
           <div className="space-y-2">
             <Textarea
