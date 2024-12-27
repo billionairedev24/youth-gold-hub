@@ -3,15 +3,16 @@ export interface SuggestionComment {
   content: string;
   createdAt: Date;
   authorName: string;
-  status?: 'pending' | 'approve' | 'reject' | 'close';
+  authorRole?: 'admin' | 'member';
 }
 
 export interface Suggestion {
   id: string;
   title: string;
   description: string;
-  status: 'pending' | 'approved' | 'rejected';
+  status: 'pending' | 'approved' | 'rejected' | 'closed';
   createdAt: Date;
   authorName: string;
+  authorRole?: 'admin' | 'member';
   comments: SuggestionComment[];
 }
