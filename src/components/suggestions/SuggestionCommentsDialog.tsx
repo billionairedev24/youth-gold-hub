@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { User } from "lucide-react";
+import { User, MessageSquare } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { CommentsList } from "./CommentsList";
@@ -52,7 +52,7 @@ export function SuggestionCommentsDialog({
 
     const updatedSuggestion = {
       ...suggestion,
-      comments: [...suggestion.comments, newCommentObj]
+      comments: [...(suggestion.comments || []), newCommentObj]
     };
 
     onSuggestionUpdate(updatedSuggestion);
@@ -116,7 +116,7 @@ export function SuggestionCommentsDialog({
           </div>
         </DialogHeader>
 
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 overflow-y-auto">
           <div className="bg-muted/50 p-4 rounded-lg border">
             <p className="text-sm whitespace-pre-wrap">{suggestion.description}</p>
           </div>
@@ -128,21 +128,61 @@ export function SuggestionCommentsDialog({
 
           <Separator />
 
-          <CommentsList comments={suggestion.comments} />
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <MessageSquare className="h-4 w-4" />
+              <h3 className="font-medium">Comments</h3>
+            </div>
+            
+            <div className="space-y-4">
+              {suggestion.comments && suggestion.comments.length > 0 ? (
+                suggestion.comments.map((comment) => (
+                  <div
+                    key={comment.id}
+                    className="p-4 rounded-lg border bg-card hover:bg-accent/10 transition-colors"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">
+                          {comment.authorName}
+                        </span>
+                        {comment.authorRole === 'admin' && (
+                          <Badge variant="secondary" className="text-xs">
+                            Admin
+                          </Badge>
+                        )}
+                      </div>
+                      <span className="text-xs text-muted-foreground">
+                        {format(new Date(comment.createdAt), "PPp")}
+                      </span>
+                    </div>
+                    <p className="text-sm whitespace-pre-wrap">
+                      {comment.content}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <MessageSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                  <p>No comments yet</p>
+                </div>
+              )}
+            </div>
 
-          <div className="space-y-2">
-            <Textarea
-              placeholder="Add your comment..."
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              className="min-h-[100px] resize-none"
-            />
-            <Button 
-              onClick={handleAddComment}
-              className="w-full"
-            >
-              Add Comment
-            </Button>
+            <div className="space-y-2">
+              <Textarea
+                placeholder="Add your comment..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                className="min-h-[100px] resize-none"
+              />
+              <Button 
+                onClick={handleAddComment}
+                className="w-full"
+              >
+                Add Comment
+              </Button>
+            </div>
           </div>
         </div>
       </DialogContent>

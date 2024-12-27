@@ -69,6 +69,13 @@ export const getSuggestionsColumns = (): ColumnDef<Suggestion>[] => [
   },
   {
     id: "actions",
-    cell: ({ row }) => <SuggestionActions suggestion={row.original} />,
+    cell: ({ row }) => (
+      <SuggestionActions 
+        suggestion={row.original} 
+        onAction={(action) => {
+          console.log(`Action ${action} triggered for suggestion ${row.original.id}`);
+        }}
+      />
+    ),
   },
 ];
