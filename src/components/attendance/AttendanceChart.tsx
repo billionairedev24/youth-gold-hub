@@ -6,7 +6,9 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend
+  Legend,
+  Line,
+  ComposedChart
 } from 'recharts';
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
@@ -51,6 +53,9 @@ export const AttendanceChart = () => {
       setTotalAttendance(total);
       setAverageAttendance(average);
       setGenderRatio({ men: totalMen, women: totalWomen });
+    } else {
+      // If no data exists, initialize localStorage with default data
+      localStorage.setItem('attendanceData', JSON.stringify(initialData));
     }
 
     // Subscribe to storage events to update chart when attendance is added
@@ -64,6 +69,20 @@ export const AttendanceChart = () => {
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
+
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white p-4 rounded-lg shadow-lg border">
+          <p className="font-semibold">{label}</p>
+          <p className="text-blue-600">Men: {payload[0].value}</p>
+          <p className="text-pink-600">Women: {payload[1].value}</p>
+          <p className="text-gray-600">Average: {payload[2]?.value || 0}</p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <div className="space-y-6">
@@ -100,11 +119,11 @@ export const AttendanceChart = () => {
         <CardContent className="pt-6">
           <div className="h-[400px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart
+              <ComposedChart
                 data={attendanceData}
                 margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
               >
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis 
                   dataKey="month"
                   stroke="#888888"
@@ -117,29 +136,37 @@ export const AttendanceChart = () => {
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
+                  label={{ value: 'Attendance Count', angle: -90, position: 'insideLeft' }}
                 />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "white",
-                    border: "none",
-                    borderRadius: "8px",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
-                  }}
+                <Tooltip content={<CustomTooltip />} />
+                <Legend 
+                  verticalAlign="top"
+                  height={36}
+                  iconType="circle"
                 />
-                <Legend />
                 <Bar 
                   dataKey="men" 
                   name="Men" 
-                  fill="#2563eb" 
+                  fill="#3b82f6" 
                   radius={[4, 4, 0, 0]}
+                  stackId="a"
                 />
                 <Bar 
                   dataKey="women" 
                   name="Women" 
-                  fill="#db2777" 
+                  fill="#ec4899" 
                   radius={[4, 4, 0, 0]}
+                  stackId="a"
                 />
-              </BarChart>
+                <Line
+                  type="monotone"
+                  dataKey="average"
+                  name="Average"
+                  stroke="#10b981"
+                  strokeWidth={2}
+                  dot={{ fill: '#10b981' }}
+                />
+              </ComposedChart>
             </ResponsiveContainer>
           </div>
         </CardContent>
