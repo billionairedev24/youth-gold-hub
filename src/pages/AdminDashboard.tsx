@@ -2,7 +2,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Users, Calendar, Heart, ChartBar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { AttendanceChart } from "@/components/attendance/AttendanceChart";
 import { AttendanceInput } from "@/components/attendance/AttendanceInput";
 
 const stats = [
@@ -76,17 +75,6 @@ const AdminDashboard = () => {
           </Card>
         ))}
       </div>
-
-      <Card className="bg-white">
-        <CardContent className="p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-semibold">Monthly Attendance</h3>
-          </div>
-          <div className="h-[400px] w-full">
-            <AttendanceChart />
-          </div>
-        </CardContent>
-      </Card>
 
       <AttendanceInput 
         open={showAttendanceInput} 
