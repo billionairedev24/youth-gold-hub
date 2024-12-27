@@ -35,7 +35,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen bg-background overflow-hidden">
+      <div className="min-h-screen flex bg-background">
         {isAdmin && (
           <DashboardSidebar 
             isOpen={isSidebarOpen} 
@@ -51,7 +51,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             onMenuClick={handleSidebarToggle} 
             showMenuButton={isAdmin}
           />
-          <main className="flex-1 p-6">
+          <main className="flex-1 p-6 overflow-y-auto">
             {children}
           </main>
         </div>

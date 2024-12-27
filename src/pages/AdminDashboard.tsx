@@ -40,7 +40,7 @@ const AdminDashboard = () => {
   const [showAttendanceInput, setShowAttendanceInput] = useState(false);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 min-h-full pb-6">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Dashboard Overview</h1>
@@ -77,7 +77,16 @@ const AdminDashboard = () => {
         ))}
       </div>
 
-      <AttendanceChart />
+      <Card className="bg-white">
+        <CardContent className="p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-xl font-semibold">Monthly Attendance</h3>
+          </div>
+          <div className="h-[400px] w-full">
+            <AttendanceChart />
+          </div>
+        </CardContent>
+      </Card>
 
       <AttendanceInput 
         open={showAttendanceInput} 
