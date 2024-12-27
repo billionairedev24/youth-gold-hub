@@ -87,17 +87,19 @@ export function ReviewSuggestionDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[600px] w-[95vw] max-h-[85vh] overflow-hidden flex flex-col">
-        <DialogHeader
-          title={suggestion.title}
-          description={suggestion.description}
-          status={suggestion.status}
-          authorName={suggestion.authorName}
-          createdAt={suggestion.createdAt}
-          getStatusColor={getStatusColor}
-        />
+      <DialogContent className="max-w-[600px] w-[95vw] max-h-[85vh] flex flex-col">
+        <div className="flex-none">
+          <DialogHeader
+            title={suggestion.title}
+            description={suggestion.description}
+            status={suggestion.status}
+            authorName={suggestion.authorName}
+            createdAt={suggestion.createdAt}
+            getStatusColor={getStatusColor}
+          />
+        </div>
 
-        <ScrollArea className="flex-1 px-6">
+        <ScrollArea className="flex-1 px-6 min-h-0">
           <div className="space-y-6 py-4">
             <CommentSection
               comments={suggestion.comments}
@@ -108,7 +110,7 @@ export function ReviewSuggestionDialog({
           </div>
         </ScrollArea>
 
-        <div className="px-6 pt-4 border-t">
+        <div className="flex-none px-6 pt-4 border-t">
           <ActionButtons
             status={suggestion.status}
             onAction={handleSuggestionAction}
