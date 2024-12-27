@@ -18,22 +18,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { Poll } from "@/types/polls";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Edit, Lock, Unlock, MoreHorizontal } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { PollsTableToolbar } from "./PollsTableToolbar";
 import { PollsTablePagination } from "./PollsTablePagination";
+import { Poll } from "@/types/polls";
+import { PollStatistics } from "./PollStatistics";
+import { PollActions } from "./PollActions";
 
 interface PollsTableProps {
   data: Poll[];
@@ -47,10 +40,6 @@ export function PollsTable({ data, onEdit, onToggleStatus }: PollsTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const { toast } = useToast();
-
-  const getTotalVotes = (poll: Poll) => {
-    return poll.options.reduce((sum, option) => sum + option.votes, 0);
-  };
 
   const columns: ColumnDef<Poll>[] = [
     {
@@ -78,20 +67,9 @@ export function PollsTable({ data, onEdit, onToggleStatus }: PollsTableProps) {
       cell: ({ row }) => <div className="font-medium">{row.getValue("title")}</div>,
     },
     {
-      accessorKey: "options",
-      header: "Options & Votes",
-      cell: ({ row }) => (
-        <ul className="list-disc list-inside">
-          {row.original.options.map((option) => (
-            <li key={option.id}>
-              {option.text} ({option.votes} votes)
-            </li>
-          ))}
-          <li className="font-semibold mt-2">
-            Total Votes: {getTotalVotes(row.original)}
-          </li>
-        </ul>
-      ),
+      accessorKey: "statistics",
+      header: "Statistics",
+      cell: ({ row }) => <PollStatistics poll={row.original} />,
     },
     {
       accessorKey: "startDate",
@@ -114,40 +92,13 @@ export function PollsTable({ data, onEdit, onToggleStatus }: PollsTableProps) {
     },
     {
       id: "actions",
-      cell: ({ row }) => {
-        const poll = row.original;
-
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onEdit?.(poll)}>
-                <Edit className="mr-2 h-4 w-4" />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => onToggleStatus?.(poll)}
-              >
-                {poll.isActive ? (
-                  <>
-                    <Lock className="mr-2 h-4 w-4" />
-                    Close Poll
-                  </>
-                ) : (
-                  <>
-                    <Unlock className="mr-2 h-4 w-4" />
-                    Reopen Poll
-                  </>
-                )}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        );
-      },
+      cell: ({ row }) => (
+        <PollActions
+          poll={row.original}
+          onEdit={onEdit}
+          onToggleStatus={onToggleStatus}
+        />
+      ),
     },
   ];
 
