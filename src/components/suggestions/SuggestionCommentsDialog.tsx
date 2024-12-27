@@ -68,7 +68,7 @@ export function SuggestionCommentsDialog({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                <h4 className="text-sm font-medium">Comments</h4>
+                <h4 className="text-sm font-medium">Comments ({comments.length})</h4>
               </div>
               <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
                 {comments.length} comments
@@ -89,7 +89,9 @@ export function SuggestionCommentsDialog({
                         {format(new Date(comment.createdAt), "PPp")}
                       </span>
                     </div>
-                    <p className="text-sm leading-relaxed">{comment.content}</p>
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
+                      {comment.content}
+                    </p>
                   </div>
                 ))}
                 {comments.length === 0 && (
