@@ -43,7 +43,7 @@ export function SuggestionCommentsDialog({
       content: newComment,
       createdAt: new Date(),
       authorName: "Admin",
-      status: "pending",
+      status: "pending" as const,
     };
 
     setComments([...comments, newCommentObj]);
@@ -84,21 +84,21 @@ export function SuggestionCommentsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[600px] w-[95vw] h-[90vh] p-0 gap-0">
         <DialogHeader className="p-6 pb-2">
-          <DialogTitle className="text-xl font-semibold">{suggestion.title}</DialogTitle>
+          <DialogTitle className="text-xl font-semibold flex items-center gap-2">
+            <MessageSquare className="h-5 w-5" />
+            {suggestion.title}
+            <span className="text-sm font-normal text-muted-foreground ml-2">
+              ({comments.length} comments)
+            </span>
+          </DialogTitle>
         </DialogHeader>
         <div className="flex flex-col h-full overflow-hidden p-6 pt-2">
           <div className="space-y-2 mb-4 bg-muted/50 p-4 rounded-lg">
             <p className="text-sm font-medium text-muted-foreground">Description</p>
             <p className="text-sm">{suggestion.description}</p>
           </div>
-          <div className="flex-1 min-h-0 space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                <h4 className="text-sm font-medium">Comments ({comments.length})</h4>
-              </div>
-            </div>
-            <ScrollArea className="flex-1 h-[calc(100%-180px)] rounded-lg border bg-card">
+          <div className="flex-1 min-h-0">
+            <ScrollArea className="h-[calc(100%-180px)] rounded-lg border bg-card">
               <div className="p-4 space-y-6">
                 {comments.map((comment) => (
                   <div
@@ -124,8 +124,8 @@ export function SuggestionCommentsDialog({
                       <p className="text-sm leading-relaxed whitespace-pre-wrap break-words flex-1">
                         {comment.content}
                       </p>
-                      {comment.status === 'pending' && (
-                        <div className="flex gap-2">
+                      {(!comment.status || comment.status === 'pending') && (
+                        <div className="flex gap-2 shrink-0">
                           <Button
                             size="sm"
                             variant="outline"
