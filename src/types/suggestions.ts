@@ -3,6 +3,7 @@ export interface SuggestionComment {
   content: string;
   createdAt: Date;
   authorName: string;
+  status?: 'pending' | 'approve' | 'reject' | 'close';
 }
 
 export interface Suggestion {
