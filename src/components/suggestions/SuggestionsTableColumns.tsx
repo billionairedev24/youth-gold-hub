@@ -2,12 +2,38 @@ import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { Suggestion } from "@/types/suggestions";
 import { Button } from "@/components/ui/button";
-import { Eye, Edit } from "lucide-react";
+import { Eye, Edit, MoreHorizontal } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const getSuggestionsColumns = (
   onView: (suggestion: Suggestion) => void,
   onReview: (suggestion: Suggestion) => void
 ): ColumnDef<Suggestion>[] => [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "title",
     header: "Title",
@@ -48,28 +74,24 @@ export const getSuggestionsColumns = (
   },
   {
     id: "actions",
-    header: "Actions",
     cell: ({ row }) => (
-      <div className="flex items-center gap-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => onView(row.original)}
-          className="flex items-center gap-1 text-muted-foreground hover:text-foreground"
-        >
-          <Eye className="h-4 w-4" />
-          View
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => onReview(row.original)}
-          className="flex items-center gap-1 text-muted-foreground hover:text-foreground"
-        >
-          <Edit className="h-4 w-4" />
-          Review
-        </Button>
-      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="bg-white">
+          <DropdownMenuItem onClick={() => onView(row.original)}>
+            <Eye className="mr-2 h-4 w-4" />
+            View Details
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => onReview(row.original)}>
+            <Edit className="mr-2 h-4 w-4" />
+            Review
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     ),
   },
 ];

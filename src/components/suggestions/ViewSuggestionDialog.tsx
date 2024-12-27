@@ -3,6 +3,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Suggestion } from "@/types/suggestions";
 import { format } from "date-fns";
@@ -39,13 +40,18 @@ export function ViewSuggestionDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[600px] w-[95vw]">
         <DialogHeader className="space-y-4">
-          <div className="flex items-start justify-between">
-            <DialogTitle className="text-xl font-semibold">
-              {suggestion.title}
-            </DialogTitle>
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-1">
+              <DialogTitle className="text-xl font-semibold">
+                {suggestion.title}
+              </DialogTitle>
+              <DialogDescription>
+                View suggestion details and comments
+              </DialogDescription>
+            </div>
             <Badge 
               variant="outline" 
-              className={getStatusColor(suggestion.status)}
+              className={`${getStatusColor(suggestion.status)} ml-auto`}
             >
               {suggestion.status.charAt(0).toUpperCase() + suggestion.status.slice(1)}
             </Badge>
@@ -62,7 +68,7 @@ export function ViewSuggestionDialog({
           </div>
         </DialogHeader>
 
-        <ScrollArea className="max-h-[60vh]">
+        <ScrollArea className="max-h-[60vh] pr-6">
           <div className="space-y-6">
             <div className="bg-muted/50 p-4 rounded-lg">
               <p className="text-sm whitespace-pre-wrap">{suggestion.description}</p>
@@ -81,7 +87,7 @@ export function ViewSuggestionDialog({
                   suggestion.comments.map((comment) => (
                     <div
                       key={comment.id}
-                      className="p-4 rounded-lg border bg-card"
+                      className="p-4 rounded-lg border bg-card hover:bg-accent/10 transition-colors"
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">

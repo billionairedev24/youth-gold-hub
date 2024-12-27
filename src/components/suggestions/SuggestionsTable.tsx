@@ -30,13 +30,26 @@ interface SuggestionsTableProps {
   onSuggestionUpdate?: (updatedSuggestion: Suggestion) => void;
 }
 
-export function SuggestionsTable({ data, onSuggestionUpdate }: SuggestionsTableProps) {
+export function SuggestionsTable({ data: initialData, onSuggestionUpdate }: SuggestionsTableProps) {
+  const [data, setData] = useState(initialData);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [viewSuggestion, setViewSuggestion] = useState<Suggestion | null>(null);
   const [reviewSuggestion, setReviewSuggestion] = useState<Suggestion | null>(null);
+
+  const handleSuggestionUpdate = (updatedSuggestion: Suggestion) => {
+    setData(prevData =>
+      prevData.map(suggestion =>
+        suggestion.id === updatedSuggestion.id ? updatedSuggestion : suggestion
+      )
+    );
+    
+    if (onSuggestionUpdate) {
+      onSuggestionUpdate(updatedSuggestion);
+    }
+  };
 
   const table = useReactTable({
     data,
@@ -59,12 +72,6 @@ export function SuggestionsTable({ data, onSuggestionUpdate }: SuggestionsTableP
       rowSelection,
     },
   });
-
-  const handleSuggestionUpdate = (updatedSuggestion: Suggestion) => {
-    if (onSuggestionUpdate) {
-      onSuggestionUpdate(updatedSuggestion);
-    }
-  };
 
   return (
     <div className="space-y-4">
