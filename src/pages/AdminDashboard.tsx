@@ -39,7 +39,7 @@ const AdminDashboard = () => {
   const [showAttendanceInput, setShowAttendanceInput] = useState(false);
 
   return (
-    <div className="space-y-6 min-h-full pb-6 w-full">
+    <div className="space-y-6 w-full">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Dashboard Overview</h1>
