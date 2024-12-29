@@ -45,14 +45,14 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <div className={`
           flex-1 flex flex-col
           transition-all duration-300 ease-in-out
-          ${isAdmin ? (isSidebarOpen ? 'lg:ml-64' : 'lg:ml-16') : 'ml-0'}
+          ${isAdmin ? (isSidebarOpen ? 'ml-64' : 'ml-16') : 'ml-0'}
           w-full
         `}>
           <DashboardNavbar 
             onMenuClick={handleSidebarToggle} 
             showMenuButton={isAdmin}
           />
-          <main className="flex-1 p-6 overflow-y-auto w-full max-w-full">
+          <main className="flex-1 p-6 overflow-y-auto">
             {children}
           </main>
         </div>
