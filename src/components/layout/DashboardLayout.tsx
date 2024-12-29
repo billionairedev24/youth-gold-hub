@@ -52,9 +52,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             showMenuButton={isAdmin}
           />
           <main className="flex-1 p-6 overflow-y-auto w-full">
-            <div className="max-w-[2000px] mx-auto w-full">
-              {children}
-            </div>
+            {children}
           </main>
         </div>
       </div>

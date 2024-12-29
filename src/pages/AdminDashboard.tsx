@@ -53,7 +53,7 @@ const AdminDashboard = () => {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => (
           <Card key={stat.title} className="bg-white">
             <CardContent className="p-6">
