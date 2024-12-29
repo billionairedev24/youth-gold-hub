@@ -39,7 +39,7 @@ const AdminDashboard = () => {
   const [showAttendanceInput, setShowAttendanceInput] = useState(false);
 
   return (
-    <div className="space-y-6 min-h-full pb-6">
+    <div className="space-y-6 min-h-full pb-6 w-full">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Dashboard Overview</h1>
@@ -53,7 +53,7 @@ const AdminDashboard = () => {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         {stats.map((stat) => (
           <Card key={stat.title} className="bg-white">
             <CardContent className="p-6">
